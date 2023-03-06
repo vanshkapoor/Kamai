@@ -1,5 +1,5 @@
 const common = {
-
+    borderRadius: 20
 }
 
 export const darkMode = {
@@ -14,7 +14,8 @@ export const darkMode = {
         orange:'#9B7843',
         yellow:'#9B9843',
         textgrey: '#3A3A3A',
-    }
+    },
+    ...common
 }
 
 export const lightMode = {
@@ -30,5 +31,6 @@ export const lightMode = {
         yellow:'rgba(155, 152, 67, 0.71)',
         textgrey: '#3A3A3A',
         textblack: 'black'
-    }
+    },
+    ...common
 }
