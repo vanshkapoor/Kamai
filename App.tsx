@@ -21,7 +21,7 @@ function App(): JSX.Element {
   };
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{backgroundColor: backgroundStyle.backgroundColor.backgroundColor}}>
       <NavigationContainer theme={backgroundStyle.backgroundColor}>
         <Stack.Navigator>
           <Stack.Screen name="Home" component={Homescreen} options={{headerShown: false}} />

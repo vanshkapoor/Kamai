@@ -1,5 +1,20 @@
 const common = {
-    borderRadius: 20
+    borderRadius: 20,
+    fontSize: {
+        smallest: 12,
+        small: 14,
+        med_medium: 16,
+        medium: 18,
+        large: 18,
+        largest: 22,
+        extremeLarge: 24,
+        headerLarge: 26
+    },
+    fontWeight: {
+        bold: 'bold',
+        boldest: '900'
+    },
+    opacity: 0.6
 }
 
 export const darkMode = {
@@ -15,6 +30,12 @@ export const darkMode = {
         yellow:'#9B9843',
         textgrey: '#3A3A3A',
     },
+    defaultColor: 'white',
+    reverseDefaultColor: 'black',
+    textColor:{
+        default:'white'
+    },
+    backgroundColor: 'black',    
     ...common
 }
 
@@ -30,7 +51,12 @@ export const lightMode = {
         orange:'rgba(155, 120, 67, 0.71)',
         yellow:'rgba(155, 152, 67, 0.71)',
         textgrey: '#3A3A3A',
-        textblack: 'black'
     },
+    defaultColor: 'black',
+    reverseDefaultColor: 'white',
+    textColor:{
+        default:'black'
+    },
+    backgroundColor: 'white',
     ...common
 }

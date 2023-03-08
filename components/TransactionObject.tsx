@@ -19,22 +19,23 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
     isDebit
 }) => {
     const colors = useTheme().colors;
+    const theme = useTheme();
 
     return <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
     <View style={{flexDirection:'row'}}>
         <TouchableOpacity style=
-            {{borderWidth: 2, borderRadius: 6, justifyContent: 'center', padding: 8, margin: 2}}
+            {{borderWidth: 1, borderRadius: 6, justifyContent: 'center', padding: 8, margin: 2}}
         >
-            <Text style={{fontWeight: 'bold', fontSize: 16}}>{name[0]}</Text>
+            <Text style={{color: theme.reverseDefaultColor, fontWeight: 'bold', fontSize: 16}}>{name[0]}</Text>
         </TouchableOpacity>
         <View style={{paddingLeft: 6}}>
-            <Text style={{color: colors.textgrey,fontSize: 18, fontWeight: 'bold'}}>{name}</Text>
-            <Text style={{color: colors.textgrey,fontSize: 14}}>{mode}</Text>
+            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.med_medium, fontWeight: 'bold'}}>{name}</Text>
+            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.small}}>{mode}</Text>
         </View>
     </View>                    
-        <View style={{marginRight: 2}}>
-            <Text style={{color: colors.textgrey,fontSize: 12, fontWeight: '200'}}>{time}</Text>
-            <Text style={{color: colors.textgrey,fontSize: 18, fontWeight: 'bold'}}>{isDebit?"-":"+"}${amount}</Text>
+        <View style={{marginRight: 2,  alignItems: "flex-end"}}>
+            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.smallest, fontWeight: '200'}}>{time}</Text>
+            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.med_medium, fontWeight: 'bold'}}>{isDebit?"-":"+"}${amount}</Text>
         </View>
     </View>
 }

@@ -6,6 +6,6 @@ export const MediumSpacing = () => {
 }
 
 export const SmallSpacing = () => {
-    return <View style={{marginTop: 10}}>
+    return <View style={{marginTop: 14}}>
     </View>
 }

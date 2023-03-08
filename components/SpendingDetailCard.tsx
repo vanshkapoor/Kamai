@@ -3,14 +3,15 @@ import { useTheme } from '@react-navigation/native';
 
 export const SpendingDetailCard = () => {
     const colors = useTheme().colors;
+    const theme = useTheme();
 
-    return <View style={{backgroundColor: colors.yellow, borderRadius: 16, paddingHorizontal: 12, paddingTop: 18, paddingBottom: 10, marginBottom: 1}}>
-    <Text style={{opacity:0.6, color: colors.textgrey, fontSize: 20}}>
+    return <View style={{backgroundColor: colors.yellow, borderRadius: theme.borderRadius, paddingHorizontal: 12, paddingTop: 18, paddingBottom: 10, marginBottom: 1}}>
+    <Text style={{opacity: theme.opacity, color: theme.reverseDefaultColor, fontSize: theme.fontSize.medium}}>
         Explore
     </Text>
-    <Text style={{color: colors.textgrey, marginTop: -10, fontSize: 30}}>
-        <Text style={{fontWeight:'bold'}}>Earning</Text>
-        <Text> details</Text> 
+    <Text style={{color: theme.reverseDefaultColor, marginTop: -10, fontSize: theme.fontSize.largest}}>
+        <Text style={{fontWeight: theme.fontWeight.bold}}>Earning</Text>
+        <Text style={{opacity: theme.opacity}}> details</Text> 
     </Text>
 </View>
 }

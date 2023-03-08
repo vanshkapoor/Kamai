@@ -12,17 +12,27 @@ export const CreditDebitCard: React.FC<CreditDebitCardProps> = ({
     creditValue
 }) => {
     const colors = useTheme().colors;
-    const style = useTheme()
+    const theme = useTheme()
 
-    return <View style={{backgroundColor: colors.fadegreen, borderRadius: style.borderRadius, paddingHorizontal: 12, paddingVertical: 12, marginBottom: 1}}>
+    return <View style={{backgroundColor: colors.fadegreen, borderRadius: theme.borderRadius, paddingHorizontal: 12, paddingVertical: 12, marginBottom: 1}}>
     <View style={{flexDirection: 'row'}}>
         <View style={{flex:1}}>
-            <Text style={{color: colors.textgrey,fontSize: 30, paddingBottom: 0}}>${creditValue}</Text>
-            <Text style={{color: colors.textgrey, opacity:0.6, fontSize: 26, fontWeight: '400', paddingTop: 0, marginTop: -8}}>Credits</Text>
+            <Text style=
+                {{ color: theme.reverseDefaultColor, fontWeight: theme.fontWeight.bold,
+                fontSize: theme.fontSize.largest, paddingBottom: 0}}
+            >
+                ${creditValue}
+            </Text>
+            <Text style={{color: theme.reverseDefaultColor, opacity:theme.opacity, fontSize: theme.fontSize.large, fontWeight: '400', paddingTop: 0, marginTop: -8}}>Credits</Text>
         </View>
         <View style={{flex:1}}>
-            <Text style={{color: colors.textgrey, fontSize: 30, paddingBottom: 0}}>${debitValue}</Text>
-            <Text style={{color: colors.textgrey, opacity:0.6,fontSize: 26, fontWeight: '400', paddingTop: 0, marginTop: -8}}>Debits</Text>
+            <Text style=
+                {{ color: theme.reverseDefaultColor, fontWeight: theme.fontWeight.bold,
+                fontSize: theme.fontSize.largest, paddingBottom: 0}}
+            >
+                ${debitValue}
+            </Text>
+            <Text style={{color: theme.reverseDefaultColor, opacity:theme.opacity, fontSize: theme.fontSize.large, fontWeight: '400', paddingTop: 0, marginTop: -8}}>Debits</Text>
         </View>
     </View>
 </View>

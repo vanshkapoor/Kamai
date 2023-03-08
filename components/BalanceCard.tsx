@@ -7,12 +7,13 @@ interface BalanceCardProps {
 
 export const BalanceCard: React.FC<BalanceCardProps> = ({balance}) => {
     const colors = useTheme().colors;
+    const theme = useTheme();
 
-    return <View style={{backgroundColor: colors.fadeblue, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 12, marginBottom: 1}}>
+    return <View style={{backgroundColor: colors.fadeblue, borderRadius: theme.borderRadius, paddingHorizontal: 12, paddingVertical: 12, marginBottom: 1}}>
     <View style={{flexDirection: 'row'}}>
         <View style={{flex:1}}>
-            <Text style={{color: colors.textgrey,fontSize: 35, paddingBottom: 0, marginBottom: 0}}>$4500</Text>
-            <Text style={{color: colors.textgrey, opacity:0.6, fontSize: 40, fontWeight: '200', paddingTop: 0, marginTop: -10}}>Balance</Text>
+            <Text style={{color: theme.reverseDefaultColor, fontWeight: theme.fontWeight.bold, fontSize: theme.fontSize.extremeLarge, paddingBottom: 0, marginBottom: 0}}>$4500</Text>
+            <Text style={{color: theme.reverseDefaultColor,  opacity:theme.opacity, fontSize: theme.fontSize.largest, fontWeight: '200', paddingTop: 0, marginTop: -10}}>Balance</Text>
         </View>
     </View>
 </View>

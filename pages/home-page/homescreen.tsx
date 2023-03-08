@@ -14,6 +14,7 @@ import { UPICard } from "../../components/UPICard";
 
 export const Homescreen = ({navigation}: any) => {
     const colors = useTheme().colors;
+    const theme = useTheme();
 
     return <ViewWrapper>
         <ScrollView>
@@ -21,8 +22,12 @@ export const Homescreen = ({navigation}: any) => {
         <MediumSpacing />
         <CreditDebitCard creditValue="3400" debitValue="908"/>
         <BalanceCard balance="3200" />
-        <View style={{backgroundColor: colors.green, borderRadius: 16, paddingHorizontal: 12, paddingTop: 18, paddingBottom: 10, marginBottom: 1}}>
-           <Text style={{color: colors.textgrey, opacity:0.6, fontSize:28, marginBottom: 24}}>Transactions</Text>
+        <View style={{backgroundColor: colors.green, borderRadius: theme.borderRadius,
+             paddingHorizontal: 12, paddingTop: 12, paddingBottom: 10, marginBottom: 1}}>
+           <Text 
+           style={{color: theme.reverseDefaultColor,
+            opacity:theme.opacity, fontSize:theme.fontSize.large, marginBottom: 12}}>
+            Transactions</Text>
             <View>
                 <TransactionObject 
                     name = "Vansh"
@@ -47,8 +52,8 @@ export const Homescreen = ({navigation}: any) => {
                 />
                 <SmallSpacing />
                 <TouchableOpacity style=
-                {{borderWidth: 2, borderRadius: 6, justifyContent: 'center', padding: 8}}>
-                    <Text style={{color: colors.textgrey, textAlign:'center', fontSize: 16}}> See all </Text>
+                {{borderWidth: 1, borderRadius: theme.borderRadius, justifyContent: 'center', padding: 4}}>
+                    <Text style={{color: theme.reverseDefaultColor, textAlign:'center', fontSize: theme.fontSize.small}}> See all </Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -56,10 +61,10 @@ export const Homescreen = ({navigation}: any) => {
         horizontal={true}
         >
             <View style={{backgroundColor: colors.lightblue, borderRadius: 16, paddingHorizontal: 12,
-             paddingVertical: 8, marginBottom: 1, maxWidth: 120, flexDirection:'row',
+             paddingVertical: 8, marginBottom: 1, maxWidth: 100, flexDirection:'row',
              justifyContent:'space-between'
              }}>
-            <Text style={{color: colors.textgrey, fontSize: 24}}>
+            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.medium, fontWeight: theme.fontWeight.bold}}>
                 See all UPI spends
             </Text>
             <Text style={{ textAlignVertical: 'bottom' }}>-></Text>
