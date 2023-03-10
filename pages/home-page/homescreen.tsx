@@ -1,4 +1,5 @@
-import { View, Text } from "react-native";
+import React, {useRef} from 'react';
+import { View, Text, Animated, StatusBar } from "react-native";
 import { useTheme } from '@react-navigation/native';
 import { Appbar } from "../../components/appbar";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
@@ -10,18 +11,65 @@ import { TransactionObject } from "../../components/TransactionObject";
 import { SpendingDetailCard } from "../../components/SpendingDetailCard";
 import { EarningDetailCard } from "../../components/EarningDetailsCard";
 import { UPICard } from "../../components/UPICard";
-
+import LinearGradient from 'react-native-linear-gradient';
 
 export const Homescreen = ({navigation}: any) => {
     const colors = useTheme().colors;
     const theme = useTheme();
+    const scroll = useRef(new Animated.Value(0)).current;
+    const translation = useRef(new Animated.Value(0)).current;
+
+    const headerHeight = scroll.interpolate({
+        inputRange: [0, 130],
+        outputRange: [80, 65],
+        extrapolate: 'clamp'
+    }) 
+    const translateHeader = scroll.interpolate({
+        inputRange: [0, 70],
+        outputRange: [0, 15],
+        extrapolate: 'clamp',
+    });
+    const translateHeaderText = Animated.multiply(translateHeader, -1.5);
+
+    const fadeOut = scroll.interpolate({
+        inputRange: [0, 20],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+    });
+
 
     return <ViewWrapper>
-        <ScrollView>
-        <Appbar />
+        <Appbar headerTextHeight={translateHeaderText} fadeLevel={fadeOut} headerHeight={scroll}/>   
+        <Animated.ScrollView
+        onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scroll}}}], {
+            useNativeDriver: true,
+        })}>
+        <LinearGradient colors={[theme.greenGradientFrom, theme.greenGradientTo]}>
+      
+        {/* <Animated.View style={{backgroundColor: 'blue', height: 100}}>
+        </Animated.View> */}
+        
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
+        </LinearGradient>
+
         <MediumSpacing />
         <CreditDebitCard creditValue="3400" debitValue="908"/>
         <BalanceCard balance="3200" />
+        <BalanceCard balance="3200" />
+        <BalanceCard balance="3200" />
+        <BalanceCard balance="3200" />
+        <BalanceCard balance="3200" />
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
+        <MediumSpacing />
         <View style={{backgroundColor: colors.green, borderRadius: theme.borderRadius,
              paddingHorizontal: 12, paddingTop: 12, paddingBottom: 10, marginBottom: 1}}>
            <Text 
@@ -77,7 +125,7 @@ export const Homescreen = ({navigation}: any) => {
         <SpendingDetailCard />
         <EarningDetailCard />
         <SmallSpacing />
-        </ScrollView>
+        </Animated.ScrollView>
     </ViewWrapper>
 }
 

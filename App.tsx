@@ -1,7 +1,7 @@
 import React from 'react';
 import 'react-native-gesture-handler';
 import {
-  useColorScheme,
+  useColorScheme, StatusBar
 } from 'react-native';
 import { darkMode, lightMode } from './styles/constants';
 import { NavigationContainer } from '@react-navigation/native';
@@ -22,6 +22,9 @@ function App(): JSX.Element {
 
   return (
     <SafeAreaProvider style={{backgroundColor: backgroundStyle.backgroundColor.backgroundColor}}>
+      {isDarkMode?<StatusBar animated={true} barStyle={"light-content"} hidden={false} backgroundColor={"black"}/>:
+      <StatusBar animated={true} barStyle={"dark-content"} hidden={false} backgroundColor={"transparent"}/>
+      }
       <NavigationContainer theme={backgroundStyle.backgroundColor}>
         <Stack.Navigator>
           <Stack.Screen name="Home" component={Homescreen} options={{headerShown: false}} />
