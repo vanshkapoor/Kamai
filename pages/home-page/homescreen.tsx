@@ -12,6 +12,7 @@ import { SpendingDetailCard } from "../../components/SpendingDetailCard";
 import { EarningDetailCard } from "../../components/EarningDetailsCard";
 import { UPICard } from "../../components/UPICard";
 import LinearGradient from 'react-native-linear-gradient';
+import { CreditDebitTabs } from '../../components/CreditDebitTabs';
 
 export const Homescreen = ({navigation}: any) => {
     const colors = useTheme().colors;
@@ -46,13 +47,12 @@ export const Homescreen = ({navigation}: any) => {
         })}>
         <LinearGradient colors={[theme.greenGradientFrom, theme.greenGradientTo]}>
       
-        {/* <Animated.View style={{backgroundColor: 'blue', height: 100}}>
-        </Animated.View> */}
-        
         <MediumSpacing />
         <MediumSpacing />
         <MediumSpacing />
         <MediumSpacing />
+        <MediumSpacing />
+        <CreditDebitTabs />
         <MediumSpacing />
         <MediumSpacing />
         <MediumSpacing />

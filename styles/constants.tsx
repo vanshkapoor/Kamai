@@ -19,6 +19,7 @@ const common = {
 
 export const darkMode = {
     colors: {
+        mainGreen: '#0ca36c',
         white: 'grey',
         blue: 'blue',
         fadegreen: '#7EA86A',
@@ -43,6 +44,7 @@ export const darkMode = {
 
 export const lightMode = {
     colors: {
+        mainGreen: '#0de09396',
         white: "white",
         blue: "steelblue",
         fadegreen: 'rgba(126, 168, 106, 0.65)',
