@@ -1,8 +1,8 @@
-import React, {useRef, useState} from 'react';
-import { View, Text, Animated, StatusBar, Dimensions } from "react-native";
+import React, {useEffect, useRef, useState} from 'react';
+import { View, Text, Animated, StatusBar, Dimensions, KeyboardAvoidingView, Keyboard, Button } from "react-native";
 import { useTheme, useScrollToTop } from '@react-navigation/native';
 import { Appbar } from "../../components/appbar";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { ViewWrapper } from "../../components/ViewWrapper";
 import { MediumSpacing, SmallSpacing } from "../../components/ComponentSpacing";
 import { CreditDebitCard } from "../../components/creditDebitCard";
@@ -17,21 +17,16 @@ import { CreditDebitTabs } from '../../components/CreditDebitTabs';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 export const Homescreen = ({navigation}: any) => {
-    const colors = useTheme().colors;
     const theme = useTheme();
     const [isDateSelectorVisible, setIsDateSelectorVisible] = useState(false);
     const scroll = useRef(new Animated.Value(0)).current;
-    const translation = useRef(new Animated.Value(0)).current;
     const dateHeight = useRef(new Animated.Value(0)).current;
     const scrollRef = useRef(null)
     const transactionsY = useRef(new Animated.Value(0)).current;
     const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+    const transactionOptions = ["Credit", "Debit"]
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-    const headerHeight = scroll.interpolate({
-        inputRange: [0, 130],
-        outputRange: [80, 65],
-        extrapolate: 'clamp'
-    }) 
     const translateHeader = scroll.interpolate({
         inputRange: [0, 70],
         outputRange: [0, 15],
@@ -45,6 +40,30 @@ export const Homescreen = ({navigation}: any) => {
         extrapolate: 'clamp',
     });
 
+    const keyboardHeight = useRef(new Animated.Value(0)).current;
+    
+    useEffect(() => {
+            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => {
+                updateKeyboardHeight(e.endCoordinates.height)
+            });
+            const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+                updateKeyboardHeight(0)
+            });
+            return () => {
+                keyboardDidHideListener.remove();
+                keyboardDidShowListener.remove();
+            };
+        }, []);
+
+    
+    const updateKeyboardHeight = (value)=>{
+        Animated.timing(transactionsY, {
+            toValue: -SCREEN_HEIGHT/3-value,
+            useNativeDriver: false,
+            duration: 500
+        }).start()
+    }
+    
     const showAddTransactions = () => {
         if(!isBottomSheetVisible){
             setIsBottomSheetVisible(true);
@@ -71,7 +90,6 @@ export const Homescreen = ({navigation}: any) => {
                 }).start()
         }else{
             scrollRef.current.scrollTo({y:0});
-            // useScrollToTop(scrollRef);
             setIsDateSelectorVisible(true);
             Animated.timing(dateHeight, {
                 toValue: 100,
@@ -178,14 +196,49 @@ export const Homescreen = ({navigation}: any) => {
         <MediumSpacing />
         <SmallSpacing />
         </Animated.ScrollView>
+        
         <Animated.View style=
         {{
             elevation: 4,
             width: "100%", height: SCREEN_HEIGHT, backgroundColor: theme.colors.grey, position:'absolute', top: SCREEN_HEIGHT,
             transform: [{
                 translateY: transactionsY
-            }]
+            }],
+            
         }}>
+            <Text 
+           style={{color: theme.textColor.default, paddingHorizontal: theme.paddingHorizontal,
+            fontSize:theme.fontSize.med_medium, marginBottom: 12, marginTop: 10}}>
+            Add a transaction</Text>
+            <View style={{paddingHorizontal: theme.paddingHorizontal}}>
+                <TextInput
+                    style={{
+                        paddingVertical: 6, paddingHorizontal: 6, borderWidth: 1, borderRadius: theme.borderRadius,
+                        backgroundColor: theme.backgroundColor
+                    }}
+                    placeholder='Enter amount'  
+                />
+                <View style={{flexDirection: 'row',  marginVertical: 10,}}>
+                {
+                transactionOptions.map(options => {
+                    return <TouchableOpacity style={[
+                        {
+                        paddingHorizontal: 10, paddingVertical: 6, borderWidth: 1,borderRadius: theme.borderRadius,
+                        marginHorizontal: 6, borderColor: theme.greenGradientFrom
+                    }, selectedTransaction === options && {backgroundColor: theme.greenGradientFrom}]}
+                    onPress={() => setSelectedTransaction(options)}
+                    >
+                        <Text style={{fontSize: theme.fontSize.med_medium}}>{options}</Text>
+                    </TouchableOpacity>
+                })}
+                </View>
+                <TouchableOpacity 
+                style={{
+                    marginTop: 12, backgroundColor: theme.colors.mainGreen, borderRadius: theme.borderRadius, alignItems: 'center'
+                }}>
+                    <Text style={{paddingVertical: 10, color:'white', fontSize: theme.fontSize.medium}}>SUBMIT</Text>
+                </TouchableOpacity>
+            </View>
         </Animated.View>
     </ViewWrapper>
 }
