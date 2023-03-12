@@ -2,7 +2,7 @@ import { Text, View, TouchableOpacity, Animated } from "react-native"
 import { useTheme } from '@react-navigation/native';
 import { useEffect, useState } from "react";
 
-export const Appbar:any = ({ headerTextHeight, fadeLevel, headerHeight }):JSX.Element => {
+export const Appbar:any = ({ headerTextHeight, fadeLevel, headerHeight, showDateSelection, showAddTransactions }):JSX.Element => {
     const theme = useTheme();
     const buttonScale = new Animated.Value(1);
     const [transparent, setTransparent] = useState(true);
@@ -32,7 +32,6 @@ export const Appbar:any = ({ headerTextHeight, fadeLevel, headerHeight }):JSX.El
     
     useEffect(()=>{
         const isListener = headerTextHeight.addListener(a => {
-            console.log("a-------", a);
             if(a.value < 0)
             {
                 setTransparent(false)
@@ -45,17 +44,19 @@ export const Appbar:any = ({ headerTextHeight, fadeLevel, headerHeight }):JSX.El
 
     return <Animated.View 
         style={[{
-                paddingHorizontal: 12, position:'absolute', flex: 1, width: '100%', zIndex:9999, paddingTop: 50, paddingBottom: 5, height: 100, transform: [
+                paddingHorizontal: 12, position:'absolute', flex: 1, width: '100%', zIndex:99, paddingTop: 50, paddingBottom: 5, height: 100, transform: [
                 { translateY: headerTranslation },
               ]}, styles.appBarHeader(transparent, theme.backgroundColor)]}>
             <View style={{ flexDirection: 'row',
             justifyContent: 'space-between'}}>
                 <View>
                     <Animated.Text style={{color:theme.textColor.default, fontSize: theme.fontSize.large, fontWeight: "bold", opacity: fadeLevel}}>Hii! your spends for</Animated.Text>
-                    <Animated.Text style={{color:theme.textColor.default, fontSize: theme.fontSize.headerLarge, fontWeight: "bold",  transform: [{translateY: headerTextHeight}]}}>
-                        Today</Animated.Text>
+                    <TouchableOpacity onPress={showDateSelection}>
+                        <Animated.Text style={{color:theme.textColor.default, fontSize: theme.fontSize.headerLarge, fontWeight: "bold",  transform: [{translateY: headerTextHeight}]}}>
+                            Today</Animated.Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPressIn={onPressIn} onPressOut={onPressOut} >
+                <TouchableOpacity onPress={showAddTransactions} onPressIn={onPressIn} onPressOut={onPressOut} >
                     <Animated.View style={[{borderWidth: 1, borderRadius: 6, borderColor: theme.defaultColor, 
                         justifyContent: 'center', marginVertical: 6, paddingHorizontal: 10}, animatedButtonStyle]}>
                         <Text style={{fontSize: theme.fontSize.medium, color:theme.textColor.default, fontWeight: "bold"}}>+ Add</Text>

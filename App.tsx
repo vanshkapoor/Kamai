@@ -11,6 +11,10 @@ import { Insightscreen } from './pages/insight-page/insightscreen';
 import {
   SafeAreaProvider
 } from 'react-native-safe-area-context';
+import {
+  Colors,
+} from 'react-native/Libraries/NewAppScreen';
+
 const Stack = createStackNavigator();
 
 function App(): JSX.Element {
@@ -19,11 +23,17 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? darkMode : lightMode,
   };
+  const barBackgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
 
   return (
     <SafeAreaProvider style={{backgroundColor: backgroundStyle.backgroundColor.backgroundColor}}>
       {isDarkMode?<StatusBar animated={true} barStyle={"light-content"} hidden={false} backgroundColor={"black"}/>:
-      <StatusBar animated={true} barStyle={"dark-content"} hidden={false} backgroundColor={"transparent"}/>
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={barBackgroundStyle.backgroundColor}
+       />
       }
       <NavigationContainer theme={backgroundStyle.backgroundColor}>
         <Stack.Navigator>

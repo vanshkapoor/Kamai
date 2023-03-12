@@ -20,7 +20,6 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({}) => {
     
     useEffect(() => {
         if(creditActive == true){
-            console.log("CREDIT==============", creditActive)
             Animated.parallel([
                 Animated.spring(creditTranslate,{
                     toValue: 0,
@@ -87,12 +86,12 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({}) => {
     </View>
     <View style={{ alignItems: "center", marginTop: 30}}>
         <ScrollView>
-            <Animated.View style={{ width: 150, height:80, transform: [
+            <Animated.View style={{ width: 150, height:50, transform: [
                 {
                     translateX: creditTranslate
                 }
             ] }}>
-                <Text style={{fontSize: 40, textAlign: "center"}}>
+                <Text style={{fontSize: 40, textAlign: "center", color: theme.textColor.default}}>
                     1200
                 </Text>
             </Animated.View>
@@ -101,10 +100,10 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({}) => {
                     translateX: debitTranslate,
                 },
                 {
-                    translateY: -80
+                    translateY: -50
                 }
             ] }}>
-                <Text style={{fontSize: 40, textAlign: "center"}}>
+                <Text style={{fontSize: 40, textAlign: "center", color: theme.textColor.default}}>
                     110
                 </Text>
             </Animated.View>

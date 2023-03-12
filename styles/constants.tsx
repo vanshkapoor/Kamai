@@ -1,5 +1,5 @@
 const common = {
-    borderRadius: 20,
+    borderRadius: 12,
     fontSize: {
         smallest: 12,
         small: 14,
@@ -14,12 +14,14 @@ const common = {
         bold: 'bold',
         boldest: '900'
     },
+    paddingHorizontal: 12,
     opacity: 0.6
 }
 
 export const darkMode = {
     colors: {
         mainGreen: '#0ca36c',
+        grey: '#1a1a1a',
         white: 'grey',
         blue: 'blue',
         fadegreen: '#7EA86A',
@@ -46,6 +48,7 @@ export const lightMode = {
     colors: {
         mainGreen: '#0de09396',
         white: "white",
+        grey: "#f3f3f3",
         blue: "steelblue",
         fadegreen: 'rgba(126, 168, 106, 0.65)',
         fadeblue: 'rgba(61, 160, 141, 0.7)',

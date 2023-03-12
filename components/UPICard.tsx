@@ -13,17 +13,16 @@ export const UPICard: React.FC<UPICardProps> = ({
     const colors = useTheme().colors;
     const theme = useTheme();
 
-    return <View style={{backgroundColor: colors.lightblue, borderRadius: theme.borderRadius, paddingHorizontal: 12,
-        paddingVertical: 8, marginBottom: 1, minWidth: 120, marginLeft: 2,
+    return <View style={{backgroundColor: theme.greenGradientFrom, borderRadius: theme.borderRadius, paddingHorizontal: 12,
+        paddingVertical: 8, minWidth: 120, marginLeft: 6,
         justifyContent:'space-between'
         }}>
-        <View style={{width: 25, height: 25, borderWidth: 2}}></View>
-        <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+        <View style={{flexDirection:'row'}}>
+            <View style={{width: 25, height: 25, borderWidth: 2, borderRadius: 50}}></View>
             <View>
-                <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.med_medium, fontWeight:theme.fontWeight.bold}}>{mode}</Text>
-                <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.small}}>${amount}</Text>
+                <Text style={{color: theme.textColor.default, opacity: 0.8, fontSize: theme.fontSize.med_medium,
+                    paddingLeft: 6, fontWeight:theme.fontWeight.bold}}>{mode}</Text>
             </View>
-            <Text style={{fontSize: 16, fontWeight:'500', textAlignVertical: 'bottom'}}>-></Text>
         </View>
     </View>
 }

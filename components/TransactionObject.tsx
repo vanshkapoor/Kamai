@@ -21,21 +21,26 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
     const colors = useTheme().colors;
     const theme = useTheme();
 
-    return <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+    return <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8}}>
     <View style={{flexDirection:'row'}}>
         <TouchableOpacity style=
-            {{borderWidth: 1, borderRadius: 6, justifyContent: 'center', padding: 8, margin: 2}}
+            {{borderWidth: 1, borderRadius: 6, justifyContent: 'center', padding: 10, margin: 2,backgroundColor: theme.greenGradientFrom}}
         >
-            <Text style={{color: theme.reverseDefaultColor, fontWeight: 'bold', fontSize: 16}}>{name[0]}</Text>
+            <Text style={{color: theme.textColor.default, fontWeight: 'bold', fontSize: 16}}>{name[0]}</Text>
         </TouchableOpacity>
-        <View style={{paddingLeft: 6}}>
-            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.med_medium, fontWeight: 'bold'}}>{name}</Text>
-            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.small}}>{mode}</Text>
+        <View style={{paddingLeft: 10}}>        
+            <Text style={{color: theme.textColor.default, opacity: 0.8, fontSize: theme.fontSize.large, fontWeight: 'bold'}}>{name}</Text>
+            <Text style={{
+                color: theme.textColor.default, opacity: 0.8, fontSize: theme.fontSize.smallest,
+                backgroundColor: theme.greenGradientFrom, borderRadius: 6,
+                width: 50, textAlign: 'center'
+                }}>
+                {mode}</Text>
         </View>
     </View>                    
-        <View style={{marginRight: 2,  alignItems: "flex-end"}}>
-            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.smallest, fontWeight: '200'}}>{time}</Text>
-            <Text style={{color: theme.reverseDefaultColor, fontSize: theme.fontSize.med_medium, fontWeight: 'bold'}}>{isDebit?"-":"+"}${amount}</Text>
+        <View style={{paddingRight: 6,  alignItems: "flex-end"}}>
+            <Text style={{color: theme.textColor.default, opacity: 0.5, fontSize: theme.fontSize.smallest, fontWeight: '200'}}>{time}</Text>
+            <Text style={{color: theme.textColor.default, opacity: 0.8, fontSize: theme.fontSize.large, fontWeight: 'bold'}}>{isDebit?"-":"+"}${amount}</Text>
         </View>
     </View>
 }
