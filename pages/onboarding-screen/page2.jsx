@@ -19,7 +19,8 @@ export const Page2 = () => {
         <View style={{ width: 300, paddingHorizontal: 10, paddingVertical: 10 }}>
             <Text style={{ 
                 fontSize: 30,
-                fontWeight: theme.fontWeight.bold
+                fontWeight: theme.fontWeight.bold,
+                color: theme.textColor.default
             }}>Set spend alerts</Text>
             <Text style={{ 
                 paddingTop: 5,

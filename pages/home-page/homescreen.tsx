@@ -29,6 +29,8 @@ import {CreditDebitTabs} from '../../components/CreditDebitTabs';
 import { BottomBar } from '../../components/TransactionsbottomBar';
 import { initialState, transactionsReducer } from '../../reducers/transactionsReducer';
 import { transactionActions } from '../../actions/transactionAction';
+import Icon from 'react-native-vector-icons/Feather';
+
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 export const Homescreen = ({navigation}: any) => {

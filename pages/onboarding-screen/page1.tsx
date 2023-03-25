@@ -19,7 +19,8 @@ export const Page1 = () => {
         <View style={{ width: 300, paddingHorizontal: 10, paddingVertical: 10 }}>
             <Text style={{ 
                 fontSize: 30,
-                fontWeight: theme.fontWeight.bold
+                fontWeight: theme.fontWeight.bold,
+                color: theme.textColor.default
             }}>Track your Daily Spendings</Text>
             <Text style={{ 
                 paddingTop: 5,
