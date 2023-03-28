@@ -16,10 +16,10 @@ export const Page1 = () => {
         <MediumSpacing/>
         <MediumSpacing/>
         <MediumSpacing/>
-        <View style={{ width: 300, paddingHorizontal: 10, paddingVertical: 10 }}>
+        <View style={{ width: 300, paddingHorizontal: 16, paddingVertical: 10 }}>
             <Text style={{ 
                 fontSize: 30,
-                fontWeight: theme.fontWeight.bold,
+                fontWeight: theme.fontWeight.boldest,
                 color: theme.textColor.default
             }}>Track your Daily Spendings</Text>
             <Text style={{ 

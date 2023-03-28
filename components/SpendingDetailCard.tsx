@@ -11,11 +11,9 @@ export const SpendingDetailCard = () => {
         backgroundColor: colors.grey,
         borderRadius: theme.borderRadius,
         paddingHorizontal: 12,
-        marginHorizontal: 10,
         flex: 1,
         paddingTop: 18,
-        paddingBottom: 10,
-        marginBottom: 1,
+        paddingBottom: 10
       }}>
       <Text
         style={{
@@ -24,15 +22,15 @@ export const SpendingDetailCard = () => {
           fontSize: theme.fontSize.medium,
           paddingTop: 18,
         }}>
-        Explore
+        Set
       </Text>
       <Text
         style={{
           color: theme.textColor.default,
-          marginTop: -10,
+          marginTop: -6,
           fontSize: theme.fontSize.largest,
         }}>
-        <Text style={{fontWeight: theme.fontWeight.bold}}>Spendings</Text>
+        <Text style={{fontWeight: theme.fontWeight.bold}}>Transaction Alerts</Text>
       </Text>
     </View>
   );

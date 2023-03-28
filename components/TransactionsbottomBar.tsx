@@ -12,6 +12,8 @@ import {
     TextInput,
     TouchableOpacity,
   } from 'react-native-gesture-handler';
+import { MediumSpacing, SmallSpacing } from './ComponentSpacing';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -21,23 +23,31 @@ export const BottomBar = React.forwardRef((props, ref) => {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const transactionOptions = ['Credit', 'Debit'];
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState(null)
+  const bottomSheetHeight = -SCREEN_HEIGHT / 2.3; 
 
   const showAddTransactions = () => {
-    if (!isBottomSheetVisible) {
+    if (isBottomSheetVisible) {
+      setIsBottomSheetVisible(false);
+    } else {
       setIsBottomSheetVisible(true);
+    }
+  };
+
+  useEffect(() => {
+    console.log("isBottomSheetVisible", isBottomSheetVisible)
+    if(isBottomSheetVisible){
       Animated.spring(transactionsY, {
-        toValue: -SCREEN_HEIGHT / 3,
+        toValue: bottomSheetHeight,
         useNativeDriver: false,
       }).start();
-    } else {
-      setIsBottomSheetVisible(false);
+    }else{
       Animated.spring(transactionsY, {
         toValue: 0,
         useNativeDriver: false,
       }).start();
     }
-  };
+  }, [isBottomSheetVisible])
 
   useImperativeHandle(ref, () => ({
     showTransactionBottomSheet(){
@@ -45,17 +55,38 @@ export const BottomBar = React.forwardRef((props, ref) => {
     }
   }))
 
+
+  const updateKeyboardHeight = (value)=>{
+    Animated.timing(transactionsY, {
+      toValue: value,
+      useNativeDriver: false,
+      duration: 300,
+    }).start();
+  };
+
+  const handleSubmit = () => {
+    if(!amount) return;
+    console.log("SUBMIT called")
+    props.submitTransaction(amount, selectedTransaction)
+    setIsBottomSheetVisible(false)
+    // updateKeyboardHeight(0)
+    showAddTransactions()
+    Keyboard.dismiss
+    setAmount(0)
+  }
+
+
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       e => {
-        updateKeyboardHeight(-SCREEN_HEIGHT / 3 - e.endCoordinates.height);
+        updateKeyboardHeight(bottomSheetHeight - e.endCoordinates.height);
       },
     );
     const keyboardDidHideListener = Keyboard.addListener(
       'keyboardDidHide',
       () => {
-          updateKeyboardHeight(0);
+          updateKeyboardHeight(bottomSheetHeight);
       },
     );
     return () => {
@@ -64,15 +95,6 @@ export const BottomBar = React.forwardRef((props, ref) => {
     };
   }, []);
 
-
-  const updateKeyboardHeight = (value)=>{
-    
-    Animated.timing(transactionsY, {
-      toValue: value,
-      useNativeDriver: false,
-      duration: 300,
-    }).start();
-  };
 
   return <Animated.View
     style={{
@@ -88,16 +110,24 @@ export const BottomBar = React.forwardRef((props, ref) => {
         },
       ]
     }}>
-    <Text
-      style={{
-        color: theme.textColor.default,
-        paddingHorizontal: theme.paddingHorizontal,
-        fontSize: theme.fontSize.med_medium,
-        marginBottom: 12,
-        marginTop: 10,
-      }}>
-      Add a transaction
-    </Text>
+      <View style={{flexDirection: "row", justifyContent:"space-between"}}>
+        <Text
+          style={{
+            color: theme.textColor.default,
+            paddingHorizontal: theme.paddingHorizontal,
+            fontSize: theme.fontSize.large,
+            marginBottom: 12,
+            marginTop: 10,
+          }}>
+          Add a transaction
+        </Text>
+        <View style={{paddingHorizontal: theme.paddingHorizontal, paddingVertical: 6}}>
+          <TouchableOpacity onPress={showAddTransactions}>
+            <Icon name='closecircle' size={24} color={"grey"} />
+          </TouchableOpacity>
+        </View>
+      </View>    
+    <SmallSpacing />
     <View style={{paddingHorizontal: theme.paddingHorizontal}}>
       <TextInput
         style={{
@@ -113,9 +143,10 @@ export const BottomBar = React.forwardRef((props, ref) => {
         placeholder="Enter amount"
       />
       <View style={{flexDirection: 'row', marginVertical: 10}}>
-        {transactionOptions.map(options => {
+        {transactionOptions.map((options, index) => {
           return (
             <TouchableOpacity
+              key={index}
               style={[
                 {
                   paddingHorizontal: 10,
@@ -137,20 +168,14 @@ export const BottomBar = React.forwardRef((props, ref) => {
           );
         })}
       </View>
+      <MediumSpacing />
       <TouchableOpacity
         style={{
-          marginTop: 12,
           backgroundColor: theme.colors.mainGreen,
           borderRadius: theme.borderRadius,
           alignItems: 'center',
         }}
-        onPress={()=>{
-          if(!amount) return;
-          props.submitTransaction(amount, selectedTransaction)
-          setIsBottomSheetVisible(false)
-          showAddTransactions()
-          setAmount(0)
-        }}
+        onPress={handleSubmit}
         >
         <Text
           style={{

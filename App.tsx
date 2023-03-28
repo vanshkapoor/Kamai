@@ -12,6 +12,10 @@ import { OnboardingScreen } from './pages/onboarding-screen/onboardingScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import { AllTransactions } from './pages/all-transactions/transactions';
+import { Button } from 'react-native';
+import { TransactionProvider } from './providers/TransactionProvider';
+import { UPIPayments } from './pages/upi-payments-page/upiPayments';
 
 
 const Tab = createBottomTabNavigator();
@@ -28,12 +32,14 @@ function HomeTabs() {
     }}>
       <Tab.Screen name="Homescreen" component={Homescreen} options={{
           headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <Icon name='home' size={24} color={focused?theme.colors.mainGreen:"grey"} />
           )         
         }} />
-      <Tab.Screen name="Insights" component={Insightscreen} options={{headerShown: false,
-        tabBarIcon: ({ color, size, focused }) => (
+      <Tab.Screen name="Insights" component={Insightscreen} options={{        
+        headerTitle:"Your Insights",
+        headerTintColor: Colors.white,
+        tabBarIcon: ({ focused }) => (
           <IonIcon name='analytics' size={24} color={focused?theme.colors.mainGreen:"grey"} />
         )
       }} />
@@ -59,28 +65,42 @@ function App(): JSX.Element {
       style={{
         backgroundColor: backgroundStyle.backgroundColor.backgroundColor,
       }}>
+      <TransactionProvider>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       />
       <NavigationContainer theme={backgroundStyle.backgroundColor}>
         <Stack.Navigator>
-          <Stack.Screen
-            name="Onboarding"
-            component={OnboardingScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Home"
-            component={HomeTabs}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Inisght"
-            component={Insightscreen}
-            options={{headerShown: false}}
-          />
+          <Stack.Group>
+            <Stack.Screen
+              name="Onboarding"
+              component={OnboardingScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Home"
+              component={HomeTabs}
+              options={{headerShown: false}}
+            />      
+            <Stack.Screen
+              name="UPIPayments"
+              component={UPIPayments}
+              options={{headerShown: false}}
+            />       
+          </Stack.Group>
+          <Stack.Group screenOptions={{ presentation: 'modal' }}>
+            <Stack.Screen
+              name="AllTransactions"
+              component={AllTransactions}
+              options={{
+                headerTitle:"All Transactions",
+                headerTintColor: Colors.white
+              }}
+            />
+          </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>
+      </TransactionProvider>
     </SafeAreaProvider>
   );
 }

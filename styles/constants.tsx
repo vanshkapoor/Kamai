@@ -32,9 +32,11 @@ export const darkMode = {
     orange: '#9B7843',
     yellow: '#9B9843',
     textgrey: '#3A3A3A',
+    red: '#9d1515'
   },
   greenGradientFrom: '#0de0934f',
   greenGradientTo: '#00000000',
+  redGradientFrom: "#e00d0d4f",
   defaultColor: 'white',
   reverseDefaultColor: 'black',
   textColor: {
@@ -58,9 +60,11 @@ export const lightMode = {
     orange: 'rgba(155, 120, 67, 0.71)',
     yellow: 'rgba(155, 152, 67, 0.71)',
     textgrey: '#3A3A3A',
+    red: '#9d1515'
   },
   greenGradientFrom: '#0de0934f',
   greenGradientTo: '#ffffff4f',
+  redGradientFrom: "#e00d0d4f",
   defaultColor: 'black',
   reverseDefaultColor: 'white',
   textColor: {

@@ -1,6 +1,7 @@
 import {View, Text} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 interface TransactionObjectProps {
   name: string;
@@ -15,10 +16,11 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
   time,
   mode,
   amount,
-  isDebit,
+  isDebit
 }) => {
   const colors = useTheme().colors;
   const theme = useTheme();
+  const navigation = useNavigation();
 
   return (
     <View
@@ -29,6 +31,7 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
       }}>
       <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
+          onPress={() => navigation.navigate("UPIPayments")}
           style={{
             borderWidth: 1,
             borderRadius: 6,
@@ -47,7 +50,9 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
           </Text>
         </TouchableOpacity>
         <View style={{paddingLeft: 10}}>
+          <TouchableOpacity onPress={() => navigation.navigate("UPIPayments")}>
             <Text style={{color: theme.textColor.default, opacity: 0.8, fontSize: theme.fontSize.large, fontWeight: 'bold'}}>{name}</Text>
+          </TouchableOpacity>
           <Text
             style={{
               color: theme.textColor.default,

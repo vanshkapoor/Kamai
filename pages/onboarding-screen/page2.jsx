@@ -16,16 +16,15 @@ export const Page2 = () => {
         <MediumSpacing/>
         <MediumSpacing/>
         <MediumSpacing/>
-        <View style={{ width: 300, paddingHorizontal: 10, paddingVertical: 10 }}>
+        <View style={{ width: 300, paddingHorizontal: 16, paddingVertical: 10 }}>
             <Text style={{ 
                 fontSize: 30,
-                fontWeight: theme.fontWeight.bold,
+                fontWeight: theme.fontWeight.boldest,
                 color: theme.textColor.default
             }}>Set spend alerts</Text>
             <Text style={{ 
                 paddingTop: 5,
                 fontSize: theme.fontSize.med_medium,
-                // fontWeight: theme.fontWeight.bold
             }}>Save more but analysing your spends</Text>
         </View>
     </View>

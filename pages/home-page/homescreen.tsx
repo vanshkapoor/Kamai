@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useRef, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -29,7 +29,8 @@ import {CreditDebitTabs} from '../../components/CreditDebitTabs';
 import { BottomBar } from '../../components/TransactionsbottomBar';
 import { initialState, transactionsReducer } from '../../reducers/transactionsReducer';
 import { transactionActions } from '../../actions/transactionAction';
-import Icon from 'react-native-vector-icons/Feather';
+import { TransactionContext } from '../../providers/TransactionProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -42,7 +43,8 @@ export const Homescreen = ({navigation}: any) => {
   const transactionsY = useRef(new Animated.Value(0)).current;
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const transactionsBottomSheetRef = useRef();
-  const [state, dispatch] = useReducer(transactionsReducer, initialState)
+  // const [state, dispatch] = useReducer(transactionsReducer, initialState)
+  const { state, dispatch } = useContext(TransactionContext);
 
   const translateHeader = scroll.interpolate({
     inputRange: [0, 70],
@@ -84,7 +86,7 @@ export const Homescreen = ({navigation}: any) => {
 
   return (
     <ViewWrapper>
-      {console.log(state)}
+      {console.log("HOME --------", state)}
       <Appbar
         headerTextHeight={translateHeaderText}
         fadeLevel={fadeOut}
@@ -156,13 +158,16 @@ export const Homescreen = ({navigation}: any) => {
             marginBottom: 1,
           }}>
           <View>
-            <TransactionObject
+            {state.items.map(transactions => {
+              return <TransactionObject
               name="Vansh"
-              mode="PayTm"
-              amount="203"
+              mode={transactions.type}
+              amount={transactions.amount}
               isDebit={false}
               time="12:15am"
             />
+            })}
+            
             <TransactionObject
               name="Rupansh"
               mode="ICICI"
@@ -185,7 +190,9 @@ export const Homescreen = ({navigation}: any) => {
                 justifyContent: 'center',
                 padding: 4,
                 borderColor: theme.defaultColor,
-              }}>
+              }}
+              onPress={() => navigation.navigate("AllTransactions")}
+              >
               <Text
                 style={{
                   color: theme.textColor.default,
@@ -220,20 +227,16 @@ export const Homescreen = ({navigation}: any) => {
         <MediumSpacing />
         <View
           style={{
-            paddingHorizontal: 12,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
+            paddingHorizontal: theme.paddingHorizontal,
           }}>
           <SpendingDetailCard />
-          <EarningDetailCard />
         </View>
         <MediumSpacing />
         <MediumSpacing />
         <SmallSpacing />
       </Animated.ScrollView>
-      <BottomBar submitTransaction={(amount: number, selectedTransaction: string) => 
+      <BottomBar submitTransaction={async(amount: number, selectedTransaction: string) => 
       {
-        console.log(amount)
         dispatch(transactionActions.add(amount, selectedTransaction)) 
       }}
        ref={transactionsBottomSheetRef} />
