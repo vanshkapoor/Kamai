@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Button,
+  PermissionsAndroid
 } from 'react-native';
 import {useTheme, useScrollToTop} from '@react-navigation/native';
 import {Appbar} from '../../components/appbar';
@@ -31,6 +32,8 @@ import { initialState, transactionsReducer } from '../../reducers/transactionsRe
 import { transactionActions } from '../../actions/transactionAction';
 import { TransactionContext } from '../../providers/TransactionProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SmsAndroid from 'react-native-get-sms-android';
+import moment from 'moment';
 
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -84,9 +87,70 @@ export const Homescreen = ({navigation}: any) => {
     height: dateHeight,
   };
 
+  useEffect(() => {
+//     const start = Date.now();
+//     // var d = new Date(1680360793566);
+//     var d = new Date(); // today!
+//     var x = 10; // go back 5 days!
+//     d.setDate(d.getDate() - x);
+
+//     var o = new Date(); // today!
+//     // o.setDate(o.getDate());
+
+//     // console.log(d.toLocaleString());
+
+//     // console.log("MOMENT DATE -----------", moment().startOf('day').valueOf())
+//     var today = moment().startOf('day').valueOf()
+
+//     // console.log(moment().subtract(3, 'days').startOf('day').valueOf())
+
+//     var Thirtymar = moment().subtract(7, 'days').startOf('day').valueOf()
+
+// // 28 mar - 31 mar (28-29-30-31)
+//     var filter = {
+//       box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
+//       minDate : Thirtymar,
+//       maxDate : o.valueOf(),
+//       // address: 'ECROMA',
+//       /**
+//        *  the next 3 filters can work torgether, they are AND-ed
+//        *  
+//        *  minDate, maxDate filters work like this:
+//        *    - If and only if you set a maxDate, it's like executing this SQL query:
+//        *    "SELECT * from messages WHERE (other filters) AND date <= maxDate"
+//        *    - Same for minDate but with "date >= minDate"
+//        */
+//       /** the next 5 filters should NOT be used together, they are OR-ed so pick one **/
+//       // maxCount: 10, // count of SMS to return each time
+//     };
+     
+//     SmsAndroid.list(
+//       JSON.stringify(filter),
+//       (fail) => {
+//         console.log('Failed with this error: ' + fail);
+//       },
+//       (count, smsList) => {
+//         // console.log('####Count: ', count);
+//         // console.log('###########List: ', smsList);
+//         var arr = JSON.parse(smsList);
+     
+//         arr.forEach(function(object) {
+//           // console.log('Object-------------------: ' + object);
+//           // console.log('Date -->' + new Date(object.date));
+//           // console.log('address -->' + object.address);
+//           // console.log('service_center -->' + object.service_center);        
+//           // console.log('Body -->' + object.body);
+//         });
+//       },
+//     );
+
+   
+  // checkSMSPermission();
+  }, [])
+
   return (
-    <ViewWrapper>
-      {console.log("HOME --------", state)}
+      <ViewWrapper>
+      {/* {console.log("HOME --------", state)} */}
       <Appbar
         headerTextHeight={translateHeaderText}
         fadeLevel={fadeOut}
@@ -139,7 +203,7 @@ export const Homescreen = ({navigation}: any) => {
               </TouchableOpacity>
             </View>
           </Animated.View>
-          <CreditDebitTabs />
+          <CreditDebitTabs />          
         </LinearGradient>
         <Text
           style={{
@@ -243,4 +307,4 @@ export const Homescreen = ({navigation}: any) => {
      
     </ViewWrapper>
   );
-};
+}

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
-import {useColorScheme, StatusBar} from 'react-native';
+import {useColorScheme, StatusBar, PermissionsAndroid} from 'react-native';
 import {darkMode, lightMode} from './styles/constants';
 import {NavigationContainer, useTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -16,6 +16,9 @@ import { AllTransactions } from './pages/all-transactions/transactions';
 import { Button } from 'react-native';
 import { TransactionProvider } from './providers/TransactionProvider';
 import { UPIPayments } from './pages/upi-payments-page/upiPayments';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { APP_LAUNCHED } from './constants/cacheConstants';
+import { SmsPermissionScreen } from './pages/sms-Permission-page/smsPermissionScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -51,14 +54,47 @@ function HomeTabs() {
 const Stack = createStackNavigator();
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [firstlaunch, setFirstlaunch] = useState<boolean|null>(null);
+  const [smsPermission, setSmsPermission] = useState(false);
 
+  const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? darkMode : lightMode,
   };
-  const barBackgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+
+  const askForSMSPermission = async () => {
+    const reqPer = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_SMS);
+    if(reqPer === PermissionsAndroid.RESULTS.GRANTED){
+      setSmsPermission(true);      
+    }else {
+      setSmsPermission(false);      
+    }
+  }
+
+  const checkSMSPermission = async () => {
+    const smsPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_SMS)
+    if(smsPermission === PermissionsAndroid.RESULTS.GRANTED)
+    {
+      setSmsPermission(true);
+    }else{
+      askForSMSPermission();
+    }
+  }
+
+
+  useEffect(() => {
+    const checkForFirstLaunch = async () => {
+      const isFirstLaunchCache = await AsyncStorage.getItem(APP_LAUNCHED);
+      if(isFirstLaunchCache == null)
+      {
+        setFirstlaunch(true);
+      }else{
+        setFirstlaunch(false);
+      }
+    }
+    checkForFirstLaunch();
+    checkSMSPermission();
+  }, [])
 
   return (
     <SafeAreaProvider
@@ -69,25 +105,39 @@ function App(): JSX.Element {
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       />
+      {
+      firstlaunch!=null && (
       <NavigationContainer theme={backgroundStyle.backgroundColor}>
         <Stack.Navigator>
-          <Stack.Group>
-            <Stack.Screen
-              name="Onboarding"
-              component={OnboardingScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="Home"
-              component={HomeTabs}
-              options={{headerShown: false}}
-            />      
-            <Stack.Screen
-              name="UPIPayments"
-              component={UPIPayments}
-              options={{headerShown: false}}
-            />       
-          </Stack.Group>
+          {firstlaunch && <Stack.Group>
+              <Stack.Screen
+                  name="Onboarding"
+                  component={OnboardingScreen}
+                  options={{headerShown: false}}
+                />
+            </Stack.Group>}
+          {
+            !smsPermission?<Stack.Group>
+              <Stack.Screen
+                  name="SmsPermission"
+                  component={SmsPermissionScreen}
+                  options={{headerShown: false}}
+                />  
+            </Stack.Group>:
+            <Stack.Group>
+                <Stack.Screen
+                  name="Home"
+                  component={HomeTabs}
+                  options={{headerShown: false}}
+                />  
+                  
+                <Stack.Screen
+                  name="UPIPayments"
+                  component={UPIPayments}
+                  options={{headerShown: false}}
+                />  
+            </Stack.Group>
+          }
           <Stack.Group screenOptions={{ presentation: 'modal' }}>
             <Stack.Screen
               name="AllTransactions"
@@ -100,6 +150,8 @@ function App(): JSX.Element {
           </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>
+      )
+      }
       </TransactionProvider>
     </SafeAreaProvider>
   );

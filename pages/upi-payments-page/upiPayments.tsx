@@ -100,7 +100,8 @@ export const UPIPayments = ({navigation}: any) => {
         </Animated.View>
       <Animated.ScrollView
         onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scroll}}}],
+          [
+            {nativeEvent: {contentOffset: {y: scroll}}}],
           {
             useNativeDriver: true,
           },
