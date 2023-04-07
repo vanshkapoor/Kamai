@@ -34,9 +34,9 @@ import { TransactionContext } from '../../providers/TransactionProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SmsAndroid from 'react-native-get-sms-android';
 import moment from 'moment';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 
-const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 export const Homescreen = ({navigation}: any) => {
   const theme = useTheme();
   const [isDateSelectorVisible, setIsDateSelectorVisible] = useState(false);
@@ -46,8 +46,12 @@ export const Homescreen = ({navigation}: any) => {
   const transactionsY = useRef(new Animated.Value(0)).current;
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const transactionsBottomSheetRef = useRef();
+  const rotateArrow = useRef(new Animated.Value(0)).current;
   // const [state, dispatch] = useReducer(transactionsReducer, initialState)
   const { state, dispatch } = useContext(TransactionContext);
+  const timefilter = [ "Today", "Yesterday", "Last week", "1 Month", "3 Months", "6 Months"]
+  const [selectedTime, setSelectedTime] = useState("Today");
+
 
   const translateHeader = scroll.interpolate({
     inputRange: [0, 70],
@@ -67,19 +71,34 @@ export const Homescreen = ({navigation}: any) => {
   const updateDateSelection = () => {
     if (isDateSelectorVisible) {
       setIsDateSelectorVisible(false);
-      Animated.timing(dateHeight, {
-        toValue: 0,
-        useNativeDriver: false,
-        duration: 500,
-      }).start();
+      Animated.sequence([
+        Animated.timing(dateHeight, {
+          toValue: 0,
+          useNativeDriver: false,
+          duration: 500,
+        }),
+        Animated.timing(rotateArrow, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        })
+      ]).start()
+     
     } else {
       scrollRef.current.scrollTo({y: 0});
       setIsDateSelectorVisible(true);
+      Animated.sequence([
       Animated.timing(dateHeight, {
         toValue: 100,
         useNativeDriver: false,
         duration: 500,
-      }).start();
+      }),
+      Animated.timing(rotateArrow, {
+        toValue: 180,
+        duration: 300,
+        useNativeDriver: true,
+      })
+    ]).start()
     }
   };
 
@@ -145,7 +164,6 @@ export const Homescreen = ({navigation}: any) => {
 //     );
 
    
-  // checkSMSPermission();
   }, [])
 
   return (
@@ -157,6 +175,8 @@ export const Homescreen = ({navigation}: any) => {
         headerHeight={scroll}
         showDateSelection={updateDateSelection}
         showAddTransactions={() => transactionsBottomSheetRef.current.showTransactionBottomSheet()}
+        arrowRotationDegree={rotateArrow}
+        selectedTime={selectedTime}
       />
       <Animated.ScrollView
         ref={scrollRef}
@@ -199,8 +219,34 @@ export const Homescreen = ({navigation}: any) => {
                 Select your date
               </Text>
               <TouchableOpacity>
-                <Text onPress={updateDateSelection}>CLOSE</Text>
+                <Text onPress={updateDateSelection}>
+                  <Icon name='closecircle' size={20} color={theme.textColor.default} />
+                </Text>
               </TouchableOpacity>
+            </View>
+            <View>
+                <View style={{flexDirection:"row"}}>
+                </View>
+                <SmallSpacing />
+                <ScrollView horizontal={true}>
+                  {
+                    timefilter.map(time => <TouchableOpacity style={{
+                      borderWidth: 1,
+                      borderColor: theme.colors.mainGreen,
+                      borderRadius: 6,
+                      paddingHorizontal: 6,
+                      paddingVertical: 2,
+                      marginHorizontal: 4,
+                      backgroundColor: selectedTime==time? theme.colors.mainGreen : theme.greenGradientFrom
+                    }}
+                    onPress={() => setSelectedTime(time)}
+                    >
+                      <Text style={{
+                        fontSize: theme.fontSize.small
+                      }}>{time}</Text>
+                    </TouchableOpacity>)
+                  }
+                </ScrollView>
             </View>
           </Animated.View>
           <CreditDebitTabs />          

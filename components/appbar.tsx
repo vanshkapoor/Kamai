@@ -1,6 +1,7 @@
 import {Text, View, TouchableOpacity, Animated} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export const Appbar: any = ({
   headerTextHeight,
@@ -8,6 +9,8 @@ export const Appbar: any = ({
   headerHeight,
   showDateSelection,
   showAddTransactions,
+  arrowRotationDegree,
+  selectedTime
 }): JSX.Element => {
   const theme = useTheme();
   const buttonScale = new Animated.Value(1);
@@ -35,6 +38,11 @@ export const Appbar: any = ({
     outputRange: [-10, -45],
     extrapolate: 'clamp',
   });
+
+  const rotationDeg = arrowRotationDegree.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['0deg', '180deg']
+  })
 
   useEffect(() => {
     const isListener = headerTextHeight.addListener(a => {
@@ -75,15 +83,31 @@ export const Appbar: any = ({
             Hii! your spends for
           </Animated.Text>
           <TouchableOpacity onPress={showDateSelection}>
-            <Animated.Text
-              style={{
-                color: theme.textColor.default,
-                fontSize: theme.fontSize.headerLarge,
-                fontWeight: 'bold',
-                transform: [{translateY: headerTextHeight}],
-              }}>
-              Today
-            </Animated.Text>
+            <View style={{
+              flexDirection: 'row'
+            }}>
+                <Animated.Text
+                  style={{
+                    color: theme.textColor.default,
+                    fontSize: theme.fontSize.headerLarge,
+                    fontWeight: 'bold',
+                    transform: [{translateY: headerTextHeight}],
+                  }}>
+                  {selectedTime}
+                </Animated.Text>
+                <Animated.Text style={{
+                    transform: [
+                      {
+                        translateY: headerTextHeight
+                      },
+                      {
+                        rotate: rotationDeg
+                      }
+                    ]
+                  }}> 
+                    <Icon name='caretdown' size={20} color={theme.textColor.default} />
+                </Animated.Text>
+            </View>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
