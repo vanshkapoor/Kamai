@@ -19,6 +19,7 @@ import { UPIPayments } from './pages/upi-payments-page/upiPayments';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { APP_LAUNCHED } from './constants/cacheConstants';
 import { SmsPermissionScreen } from './pages/sms-Permission-page/smsPermissionScreen';
+import { DateContext } from './providers/DateProvider';
 
 
 const Tab = createBottomTabNavigator();
@@ -56,6 +57,7 @@ const Stack = createStackNavigator();
 function App(): JSX.Element {
   const [firstlaunch, setFirstlaunch] = useState<boolean|null>(null);
   const [smsPermission, setSmsPermission] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('Today')
 
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
@@ -101,58 +103,60 @@ function App(): JSX.Element {
       style={{
         backgroundColor: backgroundStyle.backgroundColor.backgroundColor,
       }}>
-      <TransactionProvider>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      />
-      {
-      firstlaunch!=null && (
-      <NavigationContainer theme={backgroundStyle.backgroundColor}>
-        <Stack.Navigator>
-          {firstlaunch && <Stack.Group>
-              <Stack.Screen
-                  name="Onboarding"
-                  component={OnboardingScreen}
-                  options={{headerShown: false}}
-                />
-            </Stack.Group>}
-          {
-            !smsPermission?<Stack.Group>
-              <Stack.Screen
-                  name="SmsPermission"
-                  component={SmsPermissionScreen}
-                  options={{headerShown: false}}
-                />  
-            </Stack.Group>:
-            <Stack.Group>
+      <DateContext.Provider value={[ selectedDate, setSelectedDate ]}>
+        <TransactionProvider>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        />
+        {
+        firstlaunch!=null && (
+        <NavigationContainer theme={backgroundStyle.backgroundColor}>
+          <Stack.Navigator>
+            {firstlaunch && <Stack.Group>
                 <Stack.Screen
-                  name="Home"
-                  component={HomeTabs}
-                  options={{headerShown: false}}
-                />  
-                  
+                    name="Onboarding"
+                    component={OnboardingScreen}
+                    options={{headerShown: false}}
+                  />
+              </Stack.Group>}
+            {
+              !smsPermission?<Stack.Group>
                 <Stack.Screen
-                  name="UPIPayments"
-                  component={UPIPayments}
-                  options={{headerShown: false}}
-                />  
+                    name="SmsPermission"
+                    component={SmsPermissionScreen}
+                    options={{headerShown: false}}
+                  />  
+              </Stack.Group>:
+              <Stack.Group>
+                  <Stack.Screen
+                    name="Home"
+                    component={HomeTabs}
+                    options={{headerShown: false}}
+                  />  
+                    
+                  <Stack.Screen
+                    name="UPIPayments"
+                    component={UPIPayments}
+                    options={{headerShown: false}}
+                  />  
+              </Stack.Group>
+            }
+            <Stack.Group screenOptions={{ presentation: 'modal' }}>
+              <Stack.Screen
+                name="AllTransactions"
+                component={AllTransactions}
+                options={{
+                  headerTitle:"All Transactions",
+                  headerTintColor: Colors.white
+                }}
+              />
             </Stack.Group>
-          }
-          <Stack.Group screenOptions={{ presentation: 'modal' }}>
-            <Stack.Screen
-              name="AllTransactions"
-              component={AllTransactions}
-              options={{
-                headerTitle:"All Transactions",
-                headerTintColor: Colors.white
-              }}
-            />
-          </Stack.Group>
-        </Stack.Navigator>
-      </NavigationContainer>
-      )
-      }
-      </TransactionProvider>
+          </Stack.Navigator>
+        </NavigationContainer>
+        )
+        }
+        </TransactionProvider>
+      </DateContext.Provider>
     </SafeAreaProvider>
   );
 }

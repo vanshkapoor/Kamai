@@ -35,6 +35,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SmsAndroid from 'react-native-get-sms-android';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { DateContext } from '../../providers/DateProvider';
 
 
 export const Homescreen = ({navigation}: any) => {
@@ -51,6 +52,7 @@ export const Homescreen = ({navigation}: any) => {
   const { state, dispatch } = useContext(TransactionContext);
   const timefilter = [ "Today", "Yesterday", "Last week", "1 Month", "3 Months", "6 Months"]
   const [selectedTime, setSelectedTime] = useState("Today");
+  const [selectedDate, setSelectedDate] = useContext(DateContext);
 
 
   const translateHeader = scroll.interpolate({
@@ -65,8 +67,6 @@ export const Homescreen = ({navigation}: any) => {
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
-
-  
 
   const updateDateSelection = () => {
     if (isDateSelectorVisible) {
@@ -176,7 +176,7 @@ export const Homescreen = ({navigation}: any) => {
         showDateSelection={updateDateSelection}
         showAddTransactions={() => transactionsBottomSheetRef.current.showTransactionBottomSheet()}
         arrowRotationDegree={rotateArrow}
-        selectedTime={selectedTime}
+        selectedTime={selectedDate}
       />
       <Animated.ScrollView
         ref={scrollRef}
@@ -237,9 +237,9 @@ export const Homescreen = ({navigation}: any) => {
                       paddingHorizontal: 6,
                       paddingVertical: 2,
                       marginHorizontal: 4,
-                      backgroundColor: selectedTime==time? theme.colors.mainGreen : theme.greenGradientFrom
+                      backgroundColor: selectedDate==time? theme.colors.mainGreen : theme.greenGradientFrom
                     }}
-                    onPress={() => setSelectedTime(time)}
+                    onPress={() => setSelectedDate(time)}
                     >
                       <Text style={{
                         fontSize: theme.fontSize.small

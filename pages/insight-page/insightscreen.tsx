@@ -6,12 +6,14 @@ import { LineChart } from 'react-native-chart-kit';
 import { MediumSpacing, SmallSpacing } from '../../components/ComponentSpacing';
 import { initialState, transactionsReducer } from '../../reducers/transactionsReducer';
 import { TransactionContext } from '../../providers/TransactionProvider';
+import { DateContext } from '../../providers/DateProvider';
 
 export const Insightscreen = ({navigation}: any) => {
-  const timefilter = ["All", "3 months", "6 months", "1 year"]
+  const timefilter = [ "Today", "Yesterday", "Last week", "1 Month", "3 Months", "6 Months"]
   const theme = useTheme();
   // const [state, dispatch] = useReducer(transactionsReducer, initialState)
   const { state, dispatch } = useContext(TransactionContext);
+  const [ selectedDate, setSelectedDate ] = useContext(DateContext);
 
   return (
     <ScrollView>
@@ -26,8 +28,10 @@ export const Insightscreen = ({navigation}: any) => {
             paddingHorizontal: 6,
             paddingVertical: 2,
             marginHorizontal: 4,
-            backgroundColor: theme.greenGradientFrom
-          }}>
+            backgroundColor: selectedDate === time? theme.colors.mainGreen:theme.greenGradientFrom
+          }}
+          onPress={() => setSelectedDate(time)}
+          >
             <Text style={{
               fontSize: theme.fontSize.small
             }}>{time}</Text>
