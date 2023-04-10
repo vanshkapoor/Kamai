@@ -36,7 +36,9 @@ import SmsAndroid from 'react-native-get-sms-android';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { DateContext } from '../../providers/DateProvider';
-
+import { LAST_WEEK, ONE_MONTH, SIX_MONTHS, THREE_MONTHS, TODAY, YESTERDAY } from '../../constants/timeConstants';
+import { getTimeStampForDate } from '../../utils/dateToTimestamp';
+import { getMoneySpent } from "trny";
 
 export const Homescreen = ({navigation}: any) => {
   const theme = useTheme();
@@ -50,9 +52,13 @@ export const Homescreen = ({navigation}: any) => {
   const rotateArrow = useRef(new Animated.Value(0)).current;
   // const [state, dispatch] = useReducer(transactionsReducer, initialState)
   const { state, dispatch } = useContext(TransactionContext);
-  const timefilter = [ "Today", "Yesterday", "Last week", "1 Month", "3 Months", "6 Months"]
-  const [selectedTime, setSelectedTime] = useState("Today");
+  const timefilter = [ TODAY, YESTERDAY, LAST_WEEK, ONE_MONTH, THREE_MONTHS, SIX_MONTHS]
+  const [selectedTime, setSelectedTime] = useState(TODAY);
   const [selectedDate, setSelectedDate] = useContext(DateContext);
+  const [clubbedSMS, setClubbedSMS] = useState([])
+  const [loading, setLoading] = useState(true);
+  const [allsms, setAllsms] = useState([])
+  const [error, setError] = useState(false);
 
 
   const translateHeader = scroll.interpolate({
@@ -106,43 +112,68 @@ export const Homescreen = ({navigation}: any) => {
     height: dateHeight,
   };
 
+  const clubSMS = (sms: any) => {
+    var transactionAddressList: any = [];
+
+    var finalTransactionAddressList = sms.reduce((acc, cur) => {
+        var bankName = cur.address.slice(3,9);
+        var amount = Number(getMoneySpent(cur.body))
+        if(amount==null||amount<=0){
+          return acc;
+        }
+        console.log("Money spent ------------", amount)
+        if(!transactionAddressList.includes(bankName))
+        {
+            transactionAddressList.push(bankName);
+            acc[bankName] = [cur];
+        }
+        else{
+            acc[bankName].push(cur);
+        }
+        return acc;   
+    }, {}
+    )
+
+    console.log(Object.keys(finalTransactionAddressList))
+    setClubbedSMS(finalTransactionAddressList);    
+  }
+
+   const readAllSMSByDate = (date: string) => {
+    const { minDate, maxDate } = getTimeStampForDate(date);
+
+    var filter = {
+        box: 'inbox', 
+        minDate : minDate,
+        maxDate : maxDate,
+    };
+
+      SmsAndroid.list(
+        JSON.stringify(filter),
+        (fail) => {
+          console.log('Failed with this error: ' + fail);
+          setLoading(false);
+          setError(true);
+        },
+        async (count, smsList) => {
+          console.log('####Count: ', count);
+          // console.log('###########List: ', smsList);
+          var arr = JSON.parse(smsList);
+          setLoading(false);
+          setError(false);
+          clubSMS(arr)
+          // console.log(arr)
+          setAllsms(arr);
+        },
+      );
+  }
+
   useEffect(() => {
-//     const start = Date.now();
-//     // var d = new Date(1680360793566);
-//     var d = new Date(); // today!
-//     var x = 10; // go back 5 days!
-//     d.setDate(d.getDate() - x);
+    const {minDate, maxDate} = getTimeStampForDate(selectedDate);
+    console.log("DATE --------", minDate, "MAX DATE ---------", maxDate);
 
-//     var o = new Date(); // today!
-//     // o.setDate(o.getDate());
+    readAllSMSByDate(selectedDate)
 
-//     // console.log(d.toLocaleString());
 
-//     // console.log("MOMENT DATE -----------", moment().startOf('day').valueOf())
-//     var today = moment().startOf('day').valueOf()
-
-//     // console.log(moment().subtract(3, 'days').startOf('day').valueOf())
-
-//     var Thirtymar = moment().subtract(7, 'days').startOf('day').valueOf()
-
-// // 28 mar - 31 mar (28-29-30-31)
-//     var filter = {
-//       box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-//       minDate : Thirtymar,
-//       maxDate : o.valueOf(),
-//       // address: 'ECROMA',
-//       /**
-//        *  the next 3 filters can work torgether, they are AND-ed
-//        *  
-//        *  minDate, maxDate filters work like this:
-//        *    - If and only if you set a maxDate, it's like executing this SQL query:
-//        *    "SELECT * from messages WHERE (other filters) AND date <= maxDate"
-//        *    - Same for minDate but with "date >= minDate"
-//        */
-//       /** the next 5 filters should NOT be used together, they are OR-ed so pick one **/
-//       // maxCount: 10, // count of SMS to return each time
-//     };
-     
 //     SmsAndroid.list(
 //       JSON.stringify(filter),
 //       (fail) => {
@@ -164,7 +195,7 @@ export const Homescreen = ({navigation}: any) => {
 //     );
 
    
-  }, [])
+  }, [selectedDate])
 
   return (
       <ViewWrapper>
@@ -251,6 +282,28 @@ export const Homescreen = ({navigation}: any) => {
           </Animated.View>
           <CreditDebitTabs />          
         </LinearGradient>
+        {loading?<Text style={{color:'white'}}>loading</Text>
+        :
+          <View>
+            {/* {
+              clubbedSMS.map((bank, index) => {
+
+              })
+            } */}
+
+            {
+              allsms.map((obj, index) => {
+              let dt = new Date(obj.date)
+              return <View style={{paddingVertical: 12}}>
+                <Text>
+                  {index}- {dt.toString()} - {obj.address} -- 
+                  {obj.body}
+                </Text>
+              </View>
+            })
+            }
+          </View>
+        }
         <Text
           style={{
             color: theme.textColor.default,

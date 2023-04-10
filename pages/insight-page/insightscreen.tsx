@@ -19,7 +19,7 @@ export const Insightscreen = ({navigation}: any) => {
     <ScrollView>
     {console.log("Insights -----",state)}
     <View style={{ paddingHorizontal: 12 }}>
-      <View style={{flexDirection:"row"}}>
+      <ScrollView horizontal={true}>
         {
           timefilter.map(time => <TouchableOpacity style={{
             borderWidth: 1,
@@ -37,7 +37,7 @@ export const Insightscreen = ({navigation}: any) => {
             }}>{time}</Text>
           </TouchableOpacity>)
         }
-      </View>
+      </ScrollView>
       <View>
       <MediumSpacing />
       <MediumSpacing />

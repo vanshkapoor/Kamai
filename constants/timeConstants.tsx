@@ -1,0 +1,6 @@
+export const TODAY = "Today"
+export const YESTERDAY = "Yesterday"
+export const LAST_WEEK = "Last week"
+export const ONE_MONTH = "1 Month"
+export const THREE_MONTHS = "3 Months"
+export const SIX_MONTHS = "6 Months"
