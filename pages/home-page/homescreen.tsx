@@ -39,6 +39,7 @@ import { DateContext } from '../../providers/DateProvider';
 import { LAST_WEEK, ONE_MONTH, SIX_MONTHS, THREE_MONTHS, TODAY, YESTERDAY } from '../../constants/timeConstants';
 import { getTimeStampForDate } from '../../utils/dateToTimestamp';
 import { getMoneySpent } from "trny";
+import { useSmsStateEffect } from '../../stateEffects/useSmsStateEffect';
 
 export const Homescreen = ({navigation}: any) => {
   const theme = useTheme();
@@ -55,10 +56,8 @@ export const Homescreen = ({navigation}: any) => {
   const timefilter = [ TODAY, YESTERDAY, LAST_WEEK, ONE_MONTH, THREE_MONTHS, SIX_MONTHS]
   const [selectedTime, setSelectedTime] = useState(TODAY);
   const [selectedDate, setSelectedDate] = useContext(DateContext);
-  const [clubbedSMS, setClubbedSMS] = useState([])
-  const [loading, setLoading] = useState(true);
   const [allsms, setAllsms] = useState([])
-  const [error, setError] = useState(false);
+  const { loading, error, transactionSMS, transactionBankAccountsDetails } = useSmsStateEffect();
 
 
   const translateHeader = scroll.interpolate({
@@ -112,94 +111,9 @@ export const Homescreen = ({navigation}: any) => {
     height: dateHeight,
   };
 
-  const clubSMS = (sms: any) => {
-    var transactionAddressList: any = [];
-
-    var finalTransactionAddressList = sms.reduce((acc, cur) => {
-        var bankName = cur.address.slice(3,9);
-        var amount = Number(getMoneySpent(cur.body))
-        if(amount==null||amount<=0){
-          return acc;
-        }
-        console.log("Money spent ------------", amount)
-        if(!transactionAddressList.includes(bankName))
-        {
-            transactionAddressList.push(bankName);
-            acc[bankName] = [cur];
-        }
-        else{
-            acc[bankName].push(cur);
-        }
-        return acc;   
-    }, {}
-    )
-
-    console.log(Object.keys(finalTransactionAddressList))
-    setClubbedSMS(finalTransactionAddressList);    
-  }
-
-   const readAllSMSByDate = (date: string) => {
-    const { minDate, maxDate } = getTimeStampForDate(date);
-
-    var filter = {
-        box: 'inbox', 
-        minDate : minDate,
-        maxDate : maxDate,
-    };
-
-      SmsAndroid.list(
-        JSON.stringify(filter),
-        (fail) => {
-          console.log('Failed with this error: ' + fail);
-          setLoading(false);
-          setError(true);
-        },
-        async (count, smsList) => {
-          console.log('####Count: ', count);
-          // console.log('###########List: ', smsList);
-          var arr = JSON.parse(smsList);
-          setLoading(false);
-          setError(false);
-          clubSMS(arr)
-          // console.log(arr)
-          setAllsms(arr);
-        },
-      );
-  }
-
-  useEffect(() => {
-    const {minDate, maxDate} = getTimeStampForDate(selectedDate);
-    console.log("DATE --------", minDate, "MAX DATE ---------", maxDate);
-
-    readAllSMSByDate(selectedDate)
-
-
-//     SmsAndroid.list(
-//       JSON.stringify(filter),
-//       (fail) => {
-//         console.log('Failed with this error: ' + fail);
-//       },
-//       (count, smsList) => {
-//         // console.log('####Count: ', count);
-//         // console.log('###########List: ', smsList);
-//         var arr = JSON.parse(smsList);
-     
-//         arr.forEach(function(object) {
-//           // console.log('Object-------------------: ' + object);
-//           // console.log('Date -->' + new Date(object.date));
-//           // console.log('address -->' + object.address);
-//           // console.log('service_center -->' + object.service_center);        
-//           // console.log('Body -->' + object.body);
-//         });
-//       },
-//     );
-
-   
-  }, [selectedDate])
 
   return (
       <ViewWrapper>
-      {/* {console.log("HOME --------", state)} */}
       <Appbar
         headerTextHeight={translateHeaderText}
         fadeLevel={fadeOut}
@@ -282,28 +196,6 @@ export const Homescreen = ({navigation}: any) => {
           </Animated.View>
           <CreditDebitTabs />          
         </LinearGradient>
-        {loading?<Text style={{color:'white'}}>loading</Text>
-        :
-          <View>
-            {/* {
-              clubbedSMS.map((bank, index) => {
-
-              })
-            } */}
-
-            {
-              allsms.map((obj, index) => {
-              let dt = new Date(obj.date)
-              return <View style={{paddingVertical: 12}}>
-                <Text>
-                  {index}- {dt.toString()} - {obj.address} -- 
-                  {obj.body}
-                </Text>
-              </View>
-            })
-            }
-          </View>
-        }
         <Text
           style={{
             color: theme.textColor.default,
@@ -330,21 +222,41 @@ export const Homescreen = ({navigation}: any) => {
               time="12:15am"
             />
             })}
-            
-            <TransactionObject
-              name="Rupansh"
-              mode="ICICI"
-              amount="20"
-              isDebit={true}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
+            {
+              loading?<View>
+                  <Text style={{
+                      color: theme.textColor.default,
+                      paddingHorizontal: theme.paddingHorizontal,
+                      fontSize: theme.fontSize.med_medium,
+                      marginBottom: 12,
+                    }}>Loading...</Text>
+                </View>:
+                <View>
+                  {
+                    transactionSMS.length==0&&!loading&&<View style={{alignItems:'center'}}>
+                        <Text style={{
+                          color: theme.textColor.default,
+                          paddingHorizontal: theme.paddingHorizontal,
+                          fontSize: theme.fontSize.med_medium,
+                          marginBottom: 12,
+                        }}>
+                          No Transaction SMS found!
+                        </Text>
+                      </View>
+                  }
+                    {
+                      transactionSMS.slice(0,3).map((sms, index) => {
+                        return <TransactionObject
+                        name= {sms.address}
+                        mode= {sms.body}
+                        amount= {sms.amount}
+                        isDebit={sms.typeOfTransaction=="debited"||sms.typeOfTransaction==""||sms.typeOfTransaction=="spent"}
+                        time= {sms.date}
+                      />
+                      })
+                    }
+                </View>
+            }
             <SmallSpacing />
             <TouchableOpacity
               style={{
@@ -354,7 +266,10 @@ export const Homescreen = ({navigation}: any) => {
                 padding: 4,
                 borderColor: theme.defaultColor,
               }}
-              onPress={() => navigation.navigate("AllTransactions")}
+              onPress={() => navigation.navigate("AllTransactions", {
+                allSMS: transactionSMS
+              }
+              )}
               >
               <Text
                 style={{
@@ -379,12 +294,13 @@ export const Homescreen = ({navigation}: any) => {
           }}>
           Explore UPI Spends
         </Text>
-        <ScrollView horizontal={true} style={{paddingLeft: 12}}>
-          <UPICard mode="PayTM" amount="209" />
-          <UPICard mode="ICICI" amount="20" />
-          <UPICard mode="HDFC Bank" amount="10" />
-          <UPICard mode="HDFC" amount="10" />
-          <UPICard mode="HDFC" amount="10" />
+        <ScrollView horizontal={true} style={{paddingLeft: 12, paddingRight: 30}}>
+          {
+            Object.keys(transactionBankAccountsDetails).map((bankacc, index) => {
+              return <UPICard mode={bankacc} amount="209" />
+            })
+          }
+          <View style={{width: 20}}></View>
         </ScrollView>
         <MediumSpacing />
         <MediumSpacing />

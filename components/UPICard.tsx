@@ -1,5 +1,6 @@
 import {View, Text} from 'react-native';
 import {useTheme} from '@react-navigation/native';
+import { getBankNameMappings } from '../utils/formattings';
 
 interface UPICardProps {
   mode: string;
@@ -9,6 +10,7 @@ interface UPICardProps {
 export const UPICard: React.FC<UPICardProps> = ({mode, amount}) => {
   const colors = useTheme().colors;
   const theme = useTheme();
+  const displayName = getBankNameMappings(mode);
 
   return (
     <View
@@ -18,7 +20,8 @@ export const UPICard: React.FC<UPICardProps> = ({mode, amount}) => {
         paddingHorizontal: 12,
         paddingVertical: 8,
         minWidth: 120,
-        marginLeft: 6,
+        marginLeft: 3,
+        marginRight: 3,
         justifyContent: 'space-between',
       }}>
       <View style={{flexDirection: 'row'}}>
@@ -38,7 +41,7 @@ export const UPICard: React.FC<UPICardProps> = ({mode, amount}) => {
               paddingLeft: 6,
               fontWeight: theme.fontWeight.bold,
             }}>
-            {mode}
+            {displayName}
           </Text>
         </View>
       </View>

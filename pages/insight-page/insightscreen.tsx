@@ -2,11 +2,13 @@ import {View, Text, Button, Dimensions} from 'react-native';
 import React, {useContext, useEffect, useReducer} from 'react';
 import {useTheme} from '@react-navigation/native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { LineChart } from 'react-native-chart-kit';
+import { LineChart, BarChart } from 'react-native-chart-kit';
 import { MediumSpacing, SmallSpacing } from '../../components/ComponentSpacing';
 import { initialState, transactionsReducer } from '../../reducers/transactionsReducer';
 import { TransactionContext } from '../../providers/TransactionProvider';
 import { DateContext } from '../../providers/DateProvider';
+import { useSmsStateEffect } from '../../stateEffects/useSmsStateEffect';
+import { useGraphEffect } from '../../stateEffects/useGraphEffect';
 
 export const Insightscreen = ({navigation}: any) => {
   const timefilter = [ "Today", "Yesterday", "Last week", "1 Month", "3 Months", "6 Months"]
@@ -14,10 +16,13 @@ export const Insightscreen = ({navigation}: any) => {
   // const [state, dispatch] = useReducer(transactionsReducer, initialState)
   const { state, dispatch } = useContext(TransactionContext);
   const [ selectedDate, setSelectedDate ] = useContext(DateContext);
+  const { loading, error, transactionSMS, transactionBankAccountsDetails } = useSmsStateEffect();
+  const { label, amount, graphloading } = useGraphEffect(transactionSMS);
 
+  
   return (
     <ScrollView>
-    {console.log("Insights -----",state)}
+      {console.log("amount ----", amount)}
     <View style={{ paddingHorizontal: 12 }}>
       <ScrollView horizontal={true}>
         {
@@ -38,69 +43,7 @@ export const Insightscreen = ({navigation}: any) => {
           </TouchableOpacity>)
         }
       </ScrollView>
-      <View>
-      <MediumSpacing />
-      <MediumSpacing />
-      <Text
-          style={{
-            color: theme.textColor.default,
-            // paddingHorizontal: theme.paddingHorizontal,
-            fontSize: theme.fontSize.med_medium,
-            marginBottom: 12,
-          }}>
-          Earnings graph
-        </Text>
-      <LineChart
-        data={{
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-          datasets: [
-            {
-              data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 1000,
-                Math.random() * 100,
-                Math.random() * 100
-              ]
-            }
-          ]
-        }}
-        width={Dimensions.get("window").width*0.9} // from react-native
-        height={220}
-        yAxisLabel="$"
-        yAxisSuffix="k"
-        yAxisInterval={1} // optional, defaults to 1
-        chartConfig={{
-          backgroundGradientFrom: theme.greenGradientFrom,
-          backgroundGradientFromOpacity: 0.15,
-          backgroundGradientTo: "#08130D",
-          backgroundGradientToOpacity: 0,
-          decimalPlaces: 0, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16
-          },
-          propsForDots: {
-            r: "1",
-            strokeWidth: "4",
-            stroke: theme.colors.mainGreen
-          }
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16
-        }}
-      />
-      <Text
-        style={{
-          fontSize: theme.fontSize.med_medium,
-          marginBottom: 12,
-        }}>
-        Top Earnings
-      </Text>
+      <View>     
 
       <MediumSpacing />
       <MediumSpacing />
@@ -113,27 +56,21 @@ export const Insightscreen = ({navigation}: any) => {
         }}>
         Spends graph
       </Text>
-      <LineChart
+      {
+        graphloading?<Text></Text>: <BarChart
         data={{
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          labels: label,
           datasets: [
             {
-              data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 1000,
-                Math.random() * 100,
-                Math.random() * 100
-              ]
+              data: amount
             }
           ]
         }}
         width={Dimensions.get("window").width*0.9} // from react-native
         height={220}
-        yAxisLabel="$"
-        yAxisSuffix="k"
-        yAxisInterval={1} // optional, defaults to 1
+        yAxisLabel="Rs."
+        // yAxisSuffix="k"
+        // yAxisInterval={1} // optional, defaults to 1
         chartConfig={{
           backgroundGradientFrom: theme.redGradientFrom,
           backgroundGradientFromOpacity: 0.15,
@@ -157,13 +94,79 @@ export const Insightscreen = ({navigation}: any) => {
           borderRadius: 16
         }}
       />
-      <Text
+      }     
+      
+      {/* <Text
         style={{
           fontSize: theme.fontSize.med_medium,
           marginBottom: 12,
         }}>
         Top Spends
-      </Text>
+      </Text> */}
+
+      <MediumSpacing />
+      <MediumSpacing />
+      <Text
+          style={{
+            color: theme.textColor.default,
+            // paddingHorizontal: theme.paddingHorizontal,
+            fontSize: theme.fontSize.med_medium,
+            marginBottom: 12,
+          }}>
+          Earnings graph
+        </Text>
+      <BarChart
+        data={{
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          datasets: [
+            {
+              data: [
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 1000,
+                Math.random() * 100,
+                Math.random() * 100
+              ]
+            }
+          ]
+        }}
+        showValuesOnTopOfBars={true}
+        width={Dimensions.get("window").width*0.9} // from react-native
+        height={220}
+        yAxisLabel="$"
+        yAxisSuffix="k"
+        // yAxisInterval={1} // optional, defaults to 1
+        chartConfig={{
+          backgroundGradientFrom: theme.greenGradientFrom,
+          backgroundGradientFromOpacity: 0.15,
+          backgroundGradientTo: "#08130D",
+          backgroundGradientToOpacity: 0,
+          decimalPlaces: 0, // optional, defaults to 2dp
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
+            borderRadius: 16
+          },
+          propsForDots: {
+            r: "1",
+            strokeWidth: "4",
+            stroke: theme.colors.mainGreen
+          }
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16
+        }}
+      />
+      {/* <Text
+        style={{
+          fontSize: theme.fontSize.med_medium,
+          marginBottom: 12,
+        }}>
+        Top Earnings
+      </Text> */}
       </View>
     </View>
     </ScrollView>

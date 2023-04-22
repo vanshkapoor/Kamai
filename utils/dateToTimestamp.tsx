@@ -33,7 +33,7 @@ export const getTimeStampForDate = (date: string) => {
         case THREE_MONTHS:
             // min date = today-3 months timestamp at 12am 
             // max date = todays timestamp at at 12am
-            minDate = moment().subtract(3, 'months').startOf('day').valueOf()
+            minDate = moment().subtract(2, 'months').startOf('day').valueOf()
             maxDate = moment().startOf('day').valueOf()
             break;
         case SIX_MONTHS:

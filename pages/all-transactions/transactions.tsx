@@ -4,8 +4,9 @@ import {useTheme} from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SmallSpacing } from '../../components/ComponentSpacing';
 
-export const AllTransactions = ({navigation}: any) => {
+export const AllTransactions = ({navigation, route}: any) => {
   const theme = useTheme();
+  const { allSMS } = route.params;
 
   return (
     <View>
@@ -16,139 +17,17 @@ export const AllTransactions = ({navigation}: any) => {
             paddingBottom: 10,
             marginBottom: 1,
           }}>
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
+            {
+              allSMS.map((sms, index) => {
+                return <TransactionObject
+                  name= {sms.address}
+                  mode= {sms.body}
+                  amount= {sms.amount}
+                  isDebit= {sms.typeOfTransaction=="debited"||sms.typeOfTransaction==""||sms.typeOfTransaction=="spent"}
+                  time= {sms.date}
+              />
+              })
+            }
         </View>
       </ScrollView>
     </View>
