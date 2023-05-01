@@ -4,6 +4,7 @@ import { DateContext } from "../providers/DateProvider";
 import SmsAndroid from 'react-native-get-sms-android';
 import { getMoneySpent, getTransactionInfo, getAccount } from "trny";
 import { getFormattedName } from "../utils/formattings";
+import { getSMSTransactionType } from "../utils/readSMS";
 
 export const useSmsStateEffect = () => {
     const [transactionSMS, setTransactionSMS] = useState([])
@@ -81,4 +82,19 @@ export const useSmsStateEffect = () => {
     return {
         loading, error, transactionSMS, transactionBankAccountsDetails
     }
+}
+
+export const fetchTotalCreditAndDebitAmount = (transactionSMS:any) => {
+    const totalAmount = transactionSMS.reduce((acc, cur) => {
+        if(getSMSTransactionType(cur)){
+            acc.debit = acc.debit + cur.amount
+        }else{
+            acc.credit = acc.credit + cur.amount
+        }
+        return acc;
+    }, {
+        'credit':0,
+        'debit':0
+    })
+    return totalAmount;
 }

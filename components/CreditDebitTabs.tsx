@@ -10,10 +10,12 @@ import {useTheme} from '@react-navigation/native';
 import {useRef, useState, useEffect} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 
-interface CreditDebitTabsProps {}
+interface CreditDebitTabsProps {
+  amount: any
+}
 
 const {width} = Dimensions.get('window');
-export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({}) => {
+export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({amount}) => {
   const theme = useTheme();
   const [creditTabX, setCreditTabX] = useState(0);
   const [creditTabY, setCreditTabY] = useState(0);
@@ -117,7 +119,6 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({}) => {
         <ScrollView>
           <Animated.View
             style={{
-              width: 150,
               height: 50,
               transform: [
                 {
@@ -125,12 +126,11 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({}) => {
                 },
             ] }}>
                 <Text style={{fontSize: 40, textAlign: 'center', color: theme.textColor.default}}>
-              1200
+              {amount.credit}
             </Text>
           </Animated.View>
           <Animated.View
             style={{
-              width: 150,
               height: 80,
               transform: [
                 {
@@ -146,7 +146,7 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({}) => {
                 textAlign: 'center',
                 color: theme.textColor.default,
               }}>
-              110
+              {amount.debit}
             </Text>
           </Animated.View>
         </ScrollView>

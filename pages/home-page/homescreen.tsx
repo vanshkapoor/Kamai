@@ -39,7 +39,8 @@ import { DateContext } from '../../providers/DateProvider';
 import { LAST_WEEK, ONE_MONTH, SIX_MONTHS, THREE_MONTHS, TODAY, YESTERDAY } from '../../constants/timeConstants';
 import { getTimeStampForDate } from '../../utils/dateToTimestamp';
 import { getMoneySpent } from "trny";
-import { useSmsStateEffect } from '../../stateEffects/useSmsStateEffect';
+import { fetchTotalCreditAndDebitAmount, useSmsStateEffect } from '../../stateEffects/useSmsStateEffect';
+import { getSMSTransactionType } from '../../utils/readSMS';
 
 export const Homescreen = ({navigation}: any) => {
   const theme = useTheme();
@@ -57,7 +58,17 @@ export const Homescreen = ({navigation}: any) => {
   const [selectedTime, setSelectedTime] = useState(TODAY);
   const [selectedDate, setSelectedDate] = useContext(DateContext);
   const [allsms, setAllsms] = useState([])
+  const [amount, setAmount] = useState({
+    'credit': 0,
+    'debit': 0
+  })
   const { loading, error, transactionSMS, transactionBankAccountsDetails } = useSmsStateEffect();
+  
+
+  useEffect(() => {
+    const totalAmount = fetchTotalCreditAndDebitAmount(transactionSMS)
+    setAmount(totalAmount)
+  }, [selectedDate, transactionSMS])
 
 
   const translateHeader = scroll.interpolate({
@@ -194,7 +205,7 @@ export const Homescreen = ({navigation}: any) => {
                 </ScrollView>
             </View>
           </Animated.View>
-          <CreditDebitTabs />          
+          <CreditDebitTabs amount={amount} />          
         </LinearGradient>
         <Text
           style={{
@@ -215,7 +226,7 @@ export const Homescreen = ({navigation}: any) => {
           <View>
             {state.items.map(transactions => {
               return <TransactionObject
-              name="Vansh"
+              name="KM-Cash"
               mode={transactions.type}
               amount={transactions.amount}
               isDebit={false}
@@ -250,7 +261,7 @@ export const Homescreen = ({navigation}: any) => {
                         name= {sms.address}
                         mode= {sms.body}
                         amount= {sms.amount}
-                        isDebit={sms.typeOfTransaction=="debited"||sms.typeOfTransaction==""||sms.typeOfTransaction=="spent"}
+                        isDebit={getSMSTransactionType(sms)}
                         time= {sms.date}
                       />
                       })

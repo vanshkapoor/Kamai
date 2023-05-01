@@ -11,18 +11,17 @@ import { useSmsStateEffect } from '../../stateEffects/useSmsStateEffect';
 import { useGraphEffect } from '../../stateEffects/useGraphEffect';
 
 export const Insightscreen = ({navigation}: any) => {
-  const timefilter = [ "Today", "Yesterday", "Last week", "1 Month", "3 Months", "6 Months"]
+  const timefilter = [ "Today", "Yesterday", "Last week", "1 Month", "3 Months"]
   const theme = useTheme();
   // const [state, dispatch] = useReducer(transactionsReducer, initialState)
   const { state, dispatch } = useContext(TransactionContext);
   const [ selectedDate, setSelectedDate ] = useContext(DateContext);
   const { loading, error, transactionSMS, transactionBankAccountsDetails } = useSmsStateEffect();
-  const { label, amount, graphloading } = useGraphEffect(transactionSMS);
+  const { label, amount, graphloading, creditamount } = useGraphEffect(transactionSMS);
 
   
   return (
     <ScrollView>
-      {console.log("amount ----", amount)}
     <View style={{ paddingHorizontal: 12 }}>
       <ScrollView horizontal={true}>
         {
@@ -117,17 +116,10 @@ export const Insightscreen = ({navigation}: any) => {
         </Text>
       <BarChart
         data={{
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          labels: label,
           datasets: [
             {
-              data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 1000,
-                Math.random() * 100,
-                Math.random() * 100
-              ]
+              data: creditamount
             }
           ]
         }}

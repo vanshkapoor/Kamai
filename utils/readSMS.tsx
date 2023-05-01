@@ -19,7 +19,6 @@ export const readAllSMSByDate = (date: string) => {
       },
       async (count, smsList) => {
         console.log('####Count: ', count);
-        // console.log('###########List: ', smsList);
         var arr = JSON.parse(smsList);
         console.log('###########List: ', arr);
         await AsyncStorage.setItem("SMS", smsList);
@@ -27,6 +26,6 @@ export const readAllSMSByDate = (date: string) => {
     );
 }
 
-export const readSMSByDateForAddress = (date: string, address: string) => {
-
+export const getSMSTransactionType = (sms:any) => {
+  return sms.typeOfTransaction=="debited"||sms.typeOfTransaction==""||sms.typeOfTransaction=="spent"
 }
