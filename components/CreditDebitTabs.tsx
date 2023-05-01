@@ -126,7 +126,7 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({amount}) => {
                 },
             ] }}>
                 <Text style={{fontSize: 40, textAlign: 'center', color: theme.textColor.default}}>
-              {amount.credit}
+              {Math.trunc(amount.credit)}
             </Text>
           </Animated.View>
           <Animated.View
@@ -146,7 +146,7 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({amount}) => {
                 textAlign: 'center',
                 color: theme.textColor.default,
               }}>
-              {amount.debit}
+              {Math.trunc(amount.debit)}
             </Text>
           </Animated.View>
         </ScrollView>
