@@ -8,7 +8,7 @@ import { getSMSTransactionType } from "../utils/readSMS";
 
 export const useSmsStateEffect = () => {
     const [transactionSMS, setTransactionSMS] = useState([])
-    const [transactionBankAccountsDetails, setTransactionBankAccountsDetails] = useState([])
+    const [transactionBankAccountsDetails, setTransactionBankAccountsDetails] = useState({})
     const [selectedDate, setSelectedDate] = useContext(DateContext);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false)
@@ -46,6 +46,7 @@ export const useSmsStateEffect = () => {
         // console.log(transactionBankAccountsDetails);
         setTransactionSMS(finalTransactionAddressList);
         setTransactionBankAccountsDetails(transactionBankAccountsDetails);
+        // console.log("transaction bank account details", transactionBankAccountsDetails);
     }
 
 
@@ -59,7 +60,6 @@ export const useSmsStateEffect = () => {
         SmsAndroid.list(
             JSON.stringify(filter),
             (fail) => {
-              console.log('Failed with this error: ' + fail);
               setLoading(false);
               setError(true);
             },
@@ -74,7 +74,6 @@ export const useSmsStateEffect = () => {
     }
 
     useEffect(() => {
-        console.log("SMS effect")
         const {minDate, maxDate} = getTimeStampForDate(selectedDate);
         fetchAllSMS(minDate, maxDate);
     }, [selectedDate])

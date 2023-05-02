@@ -35,7 +35,9 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
       }}>
       <View style={{flexDirection: 'row', flex: 1}}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("UPIPayments")}
+          onPress={() => navigation.navigate("UPIPayments", {
+            account: displayName
+          })}
           style={{
             borderWidth: 1,
             borderRadius: 6,
@@ -57,7 +59,11 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
           </Text>
         </TouchableOpacity>
         <View style={{paddingLeft: 10}}>
-          <TouchableOpacity onPress={() => navigation.navigate("UPIPayments")}>
+          <TouchableOpacity onPress={() => navigation.navigate("UPIPayments", {
+            account: displayName
+          })
+        }
+          >
             <Text style={{color: theme.textColor.default, opacity: 0.8, fontSize: theme.fontSize.large, fontWeight: 'bold'}}>{displayName}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setShowMessage((prev) => !prev)}>

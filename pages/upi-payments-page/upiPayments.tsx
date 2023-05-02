@@ -5,11 +5,35 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { MediumSpacing, SmallSpacing } from '../../components/ComponentSpacing';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { LineChart } from 'react-native-chart-kit';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { fetchTotalCreditAndDebitAmount, useSmsStateEffect } from '../../stateEffects/useSmsStateEffect';
+import { getSMSTransactionType } from '../../utils/readSMS';
+import { useGraphEffect } from '../../stateEffects/useGraphEffect';
 
-export const UPIPayments = ({navigation}: any) => {
+export const UPIPayments = ({route, navigation}: any) => {
   const theme = useTheme();
   const scroll = useRef(new Animated.Value(0)).current;
+  const { account } = route.params
+  const [allsms, setAllsms] = useState([])
+  const [amountTotal, setAmountTotal] = useState({
+    'credit': 0,
+    'debit': 0
+  })
+  const { loading, error, transactionSMS, transactionBankAccountsDetails } = useSmsStateEffect();
+  
+  const { label, amount, graphloading, creditamount } = useGraphEffect(transactionSMS);
+  
+  useEffect(() => {
+    console.log("transaction bank acc details ---", transactionBankAccountsDetails)
+    setAllsms(transactionBankAccountsDetails[account])
+    const totalAmount = transactionBankAccountsDetails[account]!=undefined?
+    fetchTotalCreditAndDebitAmount(transactionBankAccountsDetails[account]):{
+      'credit': 0,
+      'debit': 0
+    }
+    setAmountTotal(totalAmount)
+  }, [transactionBankAccountsDetails])
+
 
   const scaleHeader = scroll.interpolate({
     inputRange: [0, 100],
@@ -50,7 +74,7 @@ export const UPIPayments = ({navigation}: any) => {
           transform: [{ translateY: scaleHeader }]
         }}>
           <Animated.View style={{paddingHorizontal: 6, paddingVertical: 8, transform: [{
-                translateY:backArrayTranslateY
+                translateY: backArrayTranslateY
               }]}}>
             <Icon name='arrowleft' size={24} color={theme.textColor.default}/>
           </Animated.View>
@@ -71,16 +95,16 @@ export const UPIPayments = ({navigation}: any) => {
               ]
               }}>
                 <View style={{alignItems: 'center', borderRadius: 50, backgroundColor: theme.greenGradientFrom, width: 30, height: 30, alignContent: 'center', justifyContent:'center'}}>
-                  <Text style={{ fontSize: 20, color: theme.textColor.default, fontWeight: '900'}}>V</Text>
+                  <Text style={{ fontSize: 20, color: theme.textColor.default, fontWeight: '900'}}>{account[0]}</Text>
                 </View>
                 <Text
                   style={{ marginLeft: 6, color: theme.textColor.default, fontSize: theme.fontSize.largest}}>
-                    Vansh 
+                    {account} 
                 </Text>
                 <Animated.Text style={{
                   color: theme.textColor.default, fontSize: theme.fontSize.largest,
                   opacity: reverseOpacity
-                }}> • +$1200</Animated.Text>
+                }}> • {amountTotal.credit - amountTotal.debit}</Animated.Text>
             </Animated.View>
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
               <View>
@@ -88,7 +112,7 @@ export const UPIPayments = ({navigation}: any) => {
                  style={{
                   fontSize: 30, color: theme.textColor.default, fontWeight: '900',
                   opacity: opacity
-                 }}>+$1200
+                 }}>{amountTotal.credit - amountTotal.debit}
                  </Animated.Text>
               </View>
               <View style={{paddingHorizontal: 6, paddingVertical: 8}}>
@@ -132,50 +156,48 @@ export const UPIPayments = ({navigation}: any) => {
             }}>
             Transactions graph
           </Text>
-          <LineChart
-            data={{
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-              datasets: [
-                {
-                  data: [
-                    Math.random() * 100,
-                    Math.random() * 100,
-                    Math.random() * 100,
-                    Math.random() * 1000,
-                    Math.random() * 100,
-                    Math.random() * 100
-                  ]
+          {
+            graphloading?
+            <Text></Text>
+            :
+            <LineChart
+              data={{
+                labels: label,
+                datasets: [
+                  {
+                    data: amount
+                  }
+                ]
+              }}
+              width={Dimensions.get("window").width*0.9} // from react-native
+              height={180}
+              yAxisLabel="$"
+              yAxisSuffix="k"
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundGradientFrom: theme.greenGradientFrom,
+                backgroundGradientFromOpacity: 0.15,
+                backgroundGradientTo: "#08130D",
+                backgroundGradientToOpacity: 0,
+                decimalPlaces: 0, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16
+                },
+                propsForDots: {
+                  r: "1",
+                  strokeWidth: "4",
+                  stroke: theme.colors.mainGreen
                 }
-              ]
-            }}
-            width={Dimensions.get("window").width*0.9} // from react-native
-            height={180}
-            yAxisLabel="$"
-            yAxisSuffix="k"
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={{
-              backgroundGradientFrom: theme.greenGradientFrom,
-              backgroundGradientFromOpacity: 0.15,
-              backgroundGradientTo: "#08130D",
-              backgroundGradientToOpacity: 0,
-              decimalPlaces: 0, // optional, defaults to 2dp
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              style: {
+              }}
+              bezier
+              style={{
+                marginVertical: 8,
                 borderRadius: 16
-              },
-              propsForDots: {
-                r: "1",
-                strokeWidth: "4",
-                stroke: theme.colors.mainGreen
-              }
-            }}
-            bezier
-            style={{
-              marginVertical: 8,
-              borderRadius: 16
-            }}
-          />
+              }}
+            />
+            }
             <MediumSpacing />
             <Text
               style={{
@@ -185,98 +207,30 @@ export const UPIPayments = ({navigation}: any) => {
               }}>
               Your Transactions
             </Text>
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            />
-            <TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            /><TransactionObject
-            name="Vansh"
-            mode="PayTm"
-            amount="203"
-            isDebit={false}
-            time="12:15am"
-          /><TransactionObject
-          name="Vansh"
-          mode="PayTm"
-          amount="203"
-          isDebit={false}
-          time="12:15am"
-        /><TransactionObject
-        name="Vansh"
-        mode="PayTm"
-        amount="203"
-        isDebit={false}
-        time="12:15am"
-      /><TransactionObject
-      name="Vansh"
-      mode="PayTm"
-      amount="203"
-      isDebit={false}
-      time="12:15am"
-    /><TransactionObject
-    name="Vansh"
-    mode="PayTm"
-    amount="203"
-    isDebit={false}
-    time="12:15am"
-  /><TransactionObject
-  name="Vansh"
-  mode="PayTm"
-  amount="203"
-  isDebit={false}
-  time="12:15am"
-/><TransactionObject
-              name="Vansh"
-              mode="PayTm"
-              amount="203"
-              isDebit={false}
-              time="12:15am"
-            /><TransactionObject
-            name="Vansh"
-            mode="PayTm"
-            amount="203"
-            isDebit={false}
-            time="12:15am"
-          /><TransactionObject
-          name="Vansh"
-          mode="PayTm"
-          amount="203"
-          isDebit={false}
-          time="12:15am"
-        /><TransactionObject
-        name="Vansh"
-        mode="PayTm"
-        amount="203"
-        isDebit={false}
-        time="12:15am"
-      /><TransactionObject
-      name="Vansh"
-      mode="PayTm"
-      amount="203"
-      isDebit={false}
-      time="12:15am"
-    /><TransactionObject
-    name="Vansh"
-    mode="PayTm"
-    amount="203"
-    isDebit={false}
-    time="12:15am"
-  /><TransactionObject
-  name="Vansh"
-  mode="PayTm"
-  amount="203"
-  isDebit={false}
-  time="12:15am"
-/>
+            {
+              loading?<View>
+              <Text style={{
+                  color: theme.textColor.default,
+                  paddingHorizontal: theme.paddingHorizontal,
+                  fontSize: theme.fontSize.med_medium,
+                  marginBottom: 12,
+                }}>Loading...</Text>
+            </View>:
+            <View>
+              {
+                allsms.map((sms, index) => (
+                  <TransactionObject
+                  name= {sms.address}
+                  mode= {sms.body}
+                  amount= {sms.amount}
+                  isDebit={getSMSTransactionType(sms)}
+                  time= {sms.date}
+                />
+                ))
+              }
+            </View>
+            }
+          
         </View>
       </Animated.ScrollView>
     </View>

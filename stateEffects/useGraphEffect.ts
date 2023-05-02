@@ -5,7 +5,6 @@ import { getSMSTransactionType } from "../utils/readSMS";
 
 export const useGraphEffect = (transactionSMS: any) => {
     const [selectedDate, setSelectedDate] = useContext(DateContext);
-    const labels = [];
     const [label, setLabel] = useState([""])
     const [amount, setAmount] = useState([])
     const [creditamount, setCreditamount] = useState([])

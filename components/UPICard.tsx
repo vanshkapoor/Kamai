@@ -1,5 +1,5 @@
-import {View, Text} from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import { getBankNameMappings } from '../utils/formattings';
 
 interface UPICardProps {
@@ -7,12 +7,16 @@ interface UPICardProps {
   amount: string;
 }
 
-export const UPICard: React.FC<UPICardProps> = ({mode, amount}) => {
+export const UPICard: React.FC<UPICardProps> = ({ mode, amount }) => {
   const colors = useTheme().colors;
   const theme = useTheme();
+  const navigation = useNavigation();
   const displayName = getBankNameMappings(mode);
 
   return (
+    <TouchableOpacity onPress={() => navigation.navigate("UPIPayments", {
+      account: displayName
+    })}>
     <View
       style={{
         backgroundColor: theme.greenGradientFrom,
@@ -46,5 +50,6 @@ export const UPICard: React.FC<UPICardProps> = ({mode, amount}) => {
         </View>
       </View>
     </View>
+    </TouchableOpacity>
   )
 }
