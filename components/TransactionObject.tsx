@@ -4,6 +4,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { getFormattedName, getFormattedTime } from '../utils/formattings';
 import { useState } from 'react';
+import { RUPEE } from '../constants';
 
 interface TransactionObjectProps {
   name: string;
@@ -101,7 +102,7 @@ export const TransactionObject: React.FC<TransactionObjectProps> = ({
             fontSize: theme.fontSize.large,
             fontWeight: 'bold',
           }}>
-          {isDebit ? '-' : '+'}${amount}
+          {isDebit ? '-' : '+'}{RUPEE}{amount}
         </Text>
       </View>
     </View>

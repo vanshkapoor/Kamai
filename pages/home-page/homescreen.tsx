@@ -133,6 +133,7 @@ export const Homescreen = ({navigation}: any) => {
         showAddTransactions={() => transactionsBottomSheetRef.current.showTransactionBottomSheet()}
         arrowRotationDegree={rotateArrow}
         selectedTime={selectedDate}
+        isDateSelectorVisible={isDateSelectorVisible}
       />
       <Animated.ScrollView
         ref={scrollRef}

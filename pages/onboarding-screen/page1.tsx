@@ -10,7 +10,7 @@ export const Page1 = () => {
         <MediumSpacing/>
         <MediumSpacing/>
         <View style={{alignItems: "center"}}>
-            <Image style={{width: 250, height: 250}} source={require('../../assets/money3d.png')} />
+            <Image style={{width: 300, height: 300}} source={require('../../assets/info1.png')} />
         </View>
         <MediumSpacing/>
         <MediumSpacing/>
@@ -26,7 +26,7 @@ export const Page1 = () => {
                 paddingTop: 5,
                 fontSize: theme.fontSize.med_medium,
                 // fontWeight: theme.fontWeight.bold
-            }}>Save more but analysing your spends</Text>
+            }}>Save more by analysing your spends</Text>
         </View>
     </View>
 }

@@ -1,4 +1,4 @@
-import {View, Text, Dimensions, Animated} from 'react-native';
+import {View, Text, Dimensions, Animated, ImageBackground} from 'react-native';
 import { TransactionObject } from '../../components/TransactionObject';
 import {useTheme} from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { fetchTotalCreditAndDebitAmount, useSmsStateEffect } from '../../stateEffects/useSmsStateEffect';
 import { getSMSTransactionType } from '../../utils/readSMS';
 import { useGraphEffect } from '../../stateEffects/useGraphEffect';
+import { RUPEE } from '../../constants';
 
 export const UPIPayments = ({route, navigation}: any) => {
   const theme = useTheme();
@@ -69,58 +70,60 @@ export const UPIPayments = ({route, navigation}: any) => {
           flex: 1,
           width: '100%',
           zIndex: 99,
-          backgroundColor: theme.colors.grey, 
+          backgroundColor: theme.backgroundColor, 
           height: 180,
           transform: [{ translateY: scaleHeader }]
         }}>
-          <Animated.View style={{paddingHorizontal: 6, paddingVertical: 8, transform: [{
-                translateY: backArrayTranslateY
-              }]}}>
-            <Icon name='arrowleft' size={24} color={theme.textColor.default}/>
-          </Animated.View>
-          <View style=
-          {{
-           paddingHorizontal: theme.paddingHorizontal
-          }}>
-            <MediumSpacing />
-            <MediumSpacing />
-            <MediumSpacing />
-            <Animated.View style={{ flexDirection: 'row', alignItems:'center',
-                transform: [{
-                  translateY: translateY
-                },
-                {
-                  translateX: translateX
-                }
-              ]
+          <ImageBackground source={require("../../assets/coverImg.png")}>
+              <Animated.View style={{paddingHorizontal: 6, paddingVertical: 8, transform: [{
+                    translateY: backArrayTranslateY
+                  }]}}>
+                <Icon name='arrowleft' size={24} color={theme.textColor.default}/>
+              </Animated.View>
+              <View style=
+              {{
+              paddingHorizontal: theme.paddingHorizontal
               }}>
-                <View style={{alignItems: 'center', borderRadius: 50, backgroundColor: theme.greenGradientFrom, width: 30, height: 30, alignContent: 'center', justifyContent:'center'}}>
-                  <Text style={{ fontSize: 20, color: theme.textColor.default, fontWeight: '900'}}>{account[0]}</Text>
+                <MediumSpacing />
+                <MediumSpacing />
+                <MediumSpacing />
+                <Animated.View style={{ flexDirection: 'row', alignItems:'center',
+                    transform: [{
+                      translateY: translateY
+                    },
+                    {
+                      translateX: translateX
+                    }
+                  ]
+                  }}>
+                    <View style={{alignItems: 'center', borderRadius: 50, backgroundColor: theme.greenGradientFrom, width: 30, height: 30, alignContent: 'center', justifyContent:'center'}}>
+                      <Text style={{ fontSize: 20, color: theme.textColor.default, fontWeight: '900'}}>{account[0]}</Text>
+                    </View>
+                    <Text
+                      style={{ marginLeft: 6, color: theme.textColor.default, fontSize: theme.fontSize.largest}}>
+                        {account} 
+                    </Text>
+                    <Animated.Text style={{
+                      color: theme.textColor.default, fontSize: theme.fontSize.largest,
+                      opacity: reverseOpacity
+                    }}> • {RUPEE}{Math.trunc(amountTotal.credit - amountTotal.debit)}</Animated.Text>
+                </Animated.View>
+                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                  <View>
+                    <Animated.Text
+                    style={{
+                      fontSize: 30, color: theme.textColor.default, fontWeight: '900',
+                      opacity: opacity
+                    }}>{RUPEE}{Math.trunc(amountTotal.credit - amountTotal.debit)}
+                    </Animated.Text>
+                  </View>
+                  <View style={{paddingHorizontal: 6, paddingVertical: 8}}>
+                    <Icon name='message1' size={24}/>
+                  </View>
                 </View>
-                <Text
-                  style={{ marginLeft: 6, color: theme.textColor.default, fontSize: theme.fontSize.largest}}>
-                    {account} 
-                </Text>
-                <Animated.Text style={{
-                  color: theme.textColor.default, fontSize: theme.fontSize.largest,
-                  opacity: reverseOpacity
-                }}> • {amountTotal.credit - amountTotal.debit}</Animated.Text>
-            </Animated.View>
-            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-              <View>
-                <Animated.Text
-                 style={{
-                  fontSize: 30, color: theme.textColor.default, fontWeight: '900',
-                  opacity: opacity
-                 }}>{amountTotal.credit - amountTotal.debit}
-                 </Animated.Text>
+                
               </View>
-              <View style={{paddingHorizontal: 6, paddingVertical: 8}}>
-                <Icon name='message1' size={24}/>
-              </View>
-            </View>
-            
-          </View>
+          </ImageBackground>
         </Animated.View>
       <Animated.ScrollView
         onScroll={Animated.event(

@@ -10,7 +10,8 @@ export const Appbar: any = ({
   showDateSelection,
   showAddTransactions,
   arrowRotationDegree,
-  selectedTime
+  selectedTime,
+  isDateSelectorVisible
 }): JSX.Element => {
   const theme = useTheme();
   const buttonScale = new Animated.Value(1);
@@ -84,7 +85,8 @@ export const Appbar: any = ({
           </Animated.Text>
           <TouchableOpacity onPress={showDateSelection}>
             <View style={{
-              flexDirection: 'row'
+              flexDirection: 'row',
+              alignItems: 'center'
             }}>
                 <Animated.Text
                   style={{
@@ -99,13 +101,10 @@ export const Appbar: any = ({
                     transform: [
                       {
                         translateY: headerTextHeight
-                      },
-                      {
-                        rotate: rotationDeg
                       }
                     ]
                   }}> 
-                    <Icon name='caretdown' size={20} color={theme.textColor.default} />
+                    {" "}{isDateSelectorVisible?<Icon name='caretup' size={20} color={theme.textColor.default} />:<Icon name='caretdown' size={20} color={theme.textColor.default} />}
                 </Animated.Text>
             </View>
           </TouchableOpacity>

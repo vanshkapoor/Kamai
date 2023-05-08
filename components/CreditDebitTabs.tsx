@@ -9,6 +9,7 @@ import {
 import {useTheme} from '@react-navigation/native';
 import {useRef, useState, useEffect} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
+import { RUPEE } from '../constants';
 
 interface CreditDebitTabsProps {
   amount: any
@@ -126,7 +127,7 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({amount}) => {
                 },
             ] }}>
                 <Text style={{fontSize: 40, textAlign: 'center', color: theme.textColor.default}}>
-              {Math.trunc(amount.credit)}
+              {RUPEE}{Math.trunc(amount.credit)}
             </Text>
           </Animated.View>
           <Animated.View
@@ -146,7 +147,7 @@ export const CreditDebitTabs: React.FC<CreditDebitTabsProps> = ({amount}) => {
                 textAlign: 'center',
                 color: theme.textColor.default,
               }}>
-              {Math.trunc(amount.debit)}
+              {RUPEE}{Math.trunc(amount.debit)}
             </Text>
           </Animated.View>
         </ScrollView>

@@ -4,7 +4,7 @@ import { Page1 } from "./page1";
 import { Page2 } from "./page2";
 import {useTheme} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,14 +39,12 @@ export const OnboardingScreen = ({navigation}: any) => {
         checkSMSPermission();
     }
 
-    return <View style={{flex: 1, backgroundColor: "black"}}>         
+    return <View style={{flex: 1, backgroundColor: "black"}}>
         <Swiper index={index} loop={false} dotColor="#0ca36c3b" activeDotColor={theme.colors.mainGreen} onIndexChanged={(index) => {
-            // console.log(index)
-            setIndex(index)
         }}>
             <Page1 />
             <Page2 />
-        </Swiper>     
+        </Swiper>    
         <LinearGradient
             colors={[theme.greenGradientTo, theme.greenGradientFrom]}>   
             {index == 0?
@@ -69,7 +67,7 @@ export const OnboardingScreen = ({navigation}: any) => {
                 </TouchableOpacity>
             </View>
             }
-        <View style={{height: 30}}></View>     
-        </LinearGradient>                         
+        <View style={{height: 30}}></View>   
+        </LinearGradient>     
     </View>
 }
